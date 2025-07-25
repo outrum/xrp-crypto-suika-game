@@ -23,7 +23,10 @@
       "Bash(git config:*)",
       "Bash(do echo \"Cropping $file to content bounds...\")",
       "Bash(find:*)",
-      "Bash(do echo \"Resizing $file to 512x512...\")"
+      "Bash(do echo \"Resizing $file to 512x512...\")",
+      "Bash(do echo \"Processing $asset...\")",
+      "Bash(identify:*)",
+      "Bash(do echo \"Processing $file...\")"
     ],
     "deny": []
   }

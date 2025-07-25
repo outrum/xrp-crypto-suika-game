@@ -191,17 +191,17 @@ const Game = {
 
 	// XRP ecosystem token sizes with proper progression from smaller to larger elements
 	fruitSizes: [
-		{ radius: 24,  scoreValue: 1,  img: './assets/new_generated/game_ready/optimized_xrpl_coin.png', name: "Baby Ripple" },
-		{ radius: 32,  scoreValue: 3,  img: './assets/new_generated/game_ready/optimized_xrpl_coin.png', name: "XRP Coin" },
-		{ radius: 40,  scoreValue: 6,  img: './assets/new_generated/game_ready/optimized_rocket_vertical.png', name: "Rocket Fuel" },
-		{ radius: 56,  scoreValue: 10, img: './assets/new_generated/game_ready/optimized_diamond.png', name: "Diamond Hands" },
-		{ radius: 64,  scoreValue: 15, img: './assets/new_generated/game_ready/cropped_optimized_hold_shield.png', name: "HODL Shield" },
-		{ radius: 72,  scoreValue: 21, img: './assets/new_generated/game_ready/optimized_wheal.png', name: "Crypto Whale" },
-		{ radius: 84,  scoreValue: 28, img: './assets/new_generated/game_ready/optimized_rocket_vertical.png', name: "Rocket Launch" },
-		{ radius: 96,  scoreValue: 36, img: './assets/new_generated/game_ready/optimized_rocket_vertical.png', name: "Moon Base" },
-		{ radius: 128, scoreValue: 45, img: './assets/new_generated/game_ready/optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy" },
-		{ radius: 160, scoreValue: 55, img: './assets/new_generated/game_ready/optimized_hodl.png', name: "Interstellar XRP" },
-		{ radius: 192, scoreValue: 66, img: './assets/new_generated/game_ready/optimized_crown.png', name: "Crypto God" },
+		{ radius: 24,  scoreValue: 1,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
+		{ radius: 32,  scoreValue: 3,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
+		{ radius: 40,  scoreValue: 6,  img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
+		{ radius: 56,  scoreValue: 10, img: './assets/new_generated/game_ready/cropped_optimized_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
+		{ radius: 64,  scoreValue: 15, img: './assets/new_generated/game_ready/cropped_optimized_hold_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
+		{ radius: 72,  scoreValue: 21, img: './assets/new_generated/game_ready/cropped_optimized_wheal.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
+		{ radius: 84,  scoreValue: 28, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
+		{ radius: 96,  scoreValue: 36, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
+		{ radius: 128, scoreValue: 45, img: './assets/new_generated/game_ready/cropped_optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
+		{ radius: 160, scoreValue: 55, img: './assets/new_generated/game_ready/cropped_optimized_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
+		{ radius: 192, scoreValue: 66, img: './assets/new_generated/game_ready/cropped_optimized_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
 	],
 	currentFruitSize: 0,
 	nextFruitSize: 0,
@@ -1234,10 +1234,16 @@ const Game = {
 
 	generateFruitBody: function (x, y, sizeIndex, extraConfig = {}) {
 		const size = Game.fruitSizes[sizeIndex];
+		
+		// Calculate scale based on actual image dimensions to fit circle
+		const targetDiameter = size.radius * 2;
+		const maxImageDimension = Math.max(size.imgWidth, size.imgHeight);
+		const scale = targetDiameter / maxImageDimension;
+		
 		const circle = Bodies.circle(x, y, size.radius, {
 			...friction,
 			...extraConfig,
-			render: { sprite: { texture: size.img, xScale: size.radius * 2.5 / 512, yScale: size.radius * 2.5 / 512 } },
+			render: { sprite: { texture: size.img, xScale: scale, yScale: scale } },
 		});
 		circle.sizeIndex = sizeIndex;
 		circle.popped = false;
@@ -1297,14 +1303,20 @@ const menuStatics = [
 		const x = (Game.width / 2) + 192 * Math.cos((Math.PI * 2 * index)/12);
 		const y = (Game.height * 0.4) + 192 * Math.sin((Math.PI * 2 * index)/12);
 		const r = 64;
+		
+		// Calculate proper scale based on actual image dimensions
+		const size = Game.fruitSizes[index];
+		const targetDiameter = r * 2;
+		const maxImageDimension = Math.max(size.imgWidth, size.imgHeight);
+		const scale = targetDiameter / maxImageDimension;
 
 		return Bodies.circle(x, y, r, {
 			isStatic: true,
 			render: {
 				sprite: {
-					texture: Game.fruitSizes[index].img,
-					xScale: r * 2.5 / 512,
-					yScale: r * 2.5 / 512,
+					texture: size.img,
+					xScale: scale,
+					yScale: scale,
 				},
 			},
 		});
