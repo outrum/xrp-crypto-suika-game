@@ -191,16 +191,16 @@ const Game = {
 
 	// XRP ecosystem token sizes with proper progression from smaller to larger elements
 	fruitSizes: [
-		{ radius: 24,  scoreValue: 1,  img: './assets/new_generated/optimized_xrpl_coin.png', name: "Baby Ripple" },
-		{ radius: 32,  scoreValue: 3,  img: './assets/new_generated/optimized_xrpl_coin.png', name: "XRP Coin" },
-		{ radius: 40,  scoreValue: 6,  img: './assets/new_generated/optimized_rocket_horizontal_possition.png', name: "Rocket Fuel" },
+		{ radius: 24,  scoreValue: 1,  img: './assets/new_generated/super_opt_optimized_xrpl_coin.png', name: "Baby Ripple" },
+		{ radius: 32,  scoreValue: 3,  img: './assets/new_generated/super_opt_optimized_xrpl_coin.png', name: "XRP Coin" },
+		{ radius: 40,  scoreValue: 6,  img: './assets/new_generated/optimized_rocket_fuel_vertical.png', name: "Rocket Fuel" },
 		{ radius: 56,  scoreValue: 10, img: './assets/new_generated/optimized_diamond.png', name: "Diamond Hands" },
 		{ radius: 64,  scoreValue: 15, img: './assets/new_generated/optimized_hold_shield.png', name: "HODL Shield" },
-		{ radius: 72,  scoreValue: 21, img: './assets/new_generated/optimized_wheal.png', name: "Crypto Whale" },
+		{ radius: 72,  scoreValue: 21, img: './assets/new_generated/optimized_whale_circular.png', name: "Crypto Whale" },
 		{ radius: 84,  scoreValue: 28, img: './assets/new_generated/optimized_rocket_vertical.png', name: "Rocket Launch" },
-		{ radius: 96,  scoreValue: 36, img: './assets/new_generated/optimized_hodl.png', name: "Moon Base" },
-		{ radius: 128, scoreValue: 45, img: './assets/new_generated/optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy" },
-		{ radius: 160, scoreValue: 55, img: './assets/new_generated/optimized_Spiral_galaxy_formation.png', name: "Interstellar XRP" },
+		{ radius: 96,  scoreValue: 36, img: './assets/new_generated/optimized_rocket_vertical.png', name: "Moon Base" },
+		{ radius: 128, scoreValue: 45, img: './assets/new_generated/super_opt_optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy" },
+		{ radius: 160, scoreValue: 55, img: './assets/new_generated/optimized_hodl_square.png', name: "Interstellar XRP" },
 		{ radius: 192, scoreValue: 66, img: './assets/new_generated/optimized_crown.png', name: "Crypto God" },
 	],
 	currentFruitSize: 0,
@@ -985,7 +985,7 @@ const Game = {
 				...Game.fruitSizes.map(fruit => fruit.img),
 				'./assets/new_generated/optimized_Seamless_cosmic_nebula_texture.jpeg',
 				'./assets/new_generated/optimized_start_button.png',
-				'./assets/new_generated/optimized_particle_blast.png'
+				'./assets/new_generated/super_opt_optimized_particle_blast.png'
 			];
 			
 			let loadedCount = 0;
