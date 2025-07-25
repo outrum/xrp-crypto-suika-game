@@ -1237,7 +1237,7 @@ const Game = {
 		const circle = Bodies.circle(x, y, size.radius, {
 			...friction,
 			...extraConfig,
-			render: { sprite: { texture: size.img, xScale: size.radius / 512, yScale: size.radius / 512 } },
+			render: { sprite: { texture: size.img, xScale: size.radius * 2.5 / 512, yScale: size.radius * 2.5 / 512 } },
 		});
 		circle.sizeIndex = sizeIndex;
 		circle.popped = false;
@@ -1303,8 +1303,8 @@ const menuStatics = [
 			render: {
 				sprite: {
 					texture: Game.fruitSizes[index].img,
-					xScale: r / 1024,
-					yScale: r / 1024,
+					xScale: r * 2.5 / 512,
+					yScale: r * 2.5 / 512,
 				},
 			},
 		});
