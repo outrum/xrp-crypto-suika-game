@@ -1,0 +1,45 @@
+name: Deploy Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  deploy-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run deployment checks
+      run: npm run deploy-check
+    
+    - name: Check file structure
+      run: |
+        echo "Checking required files..."
+        ls -la
+        echo "Checking assets..."
+        ls -la assets/
+        echo "Checking images..."
+        ls -la assets/img/
+    
+    - name: Validate netlify.toml
+      run: |
+        echo "Validating netlify.toml configuration..."
+        cat netlify.toml
+        
+    - name: Check for environment variable usage
+      run: |
+        echo "Checking for proper environment variable usage..."
+        grep -n "VITE_SUPABASE\|IDEOGRAM_API_KEY" index.js || echo "No environment variables found in index.js"

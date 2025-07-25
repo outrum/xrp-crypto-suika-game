@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(node:*)",
+      "Bash(netlify:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"Optimizing $file...\")",
+      "Bash(magick:*)",
+      "Bash(done)",
+      "Bash(cp:*)",
+      "Bash(grep:*)",
+      "Bash(do mv \"$file\" \"$file#opt_\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git config:*)",
+      "Bash(do echo \"Cropping $file to content bounds...\")",
+      "Bash(find:*)",
+      "Bash(do echo \"Resizing $file to 512x512...\")"
+    ],
+    "deny": []
+  }
+}
