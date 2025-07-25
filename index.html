@@ -385,32 +385,36 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
-      z-index: 9999;
+      background-color: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 99999;
       pointer-events: initial;
       user-select: initial;
     }
 
     #secret-code-content {
       text-align: center;
-      padding: 40px;
-      background: var(--col-crypto-gradient);
+      padding: 40px 60px;
+      background: linear-gradient(135deg, #1a2a4a 0%, #0C152E 50%, #1a2a4a 100%);
       border: 3px solid var(--col-crypto-gold);
       border-radius: 20px;
       box-shadow: 
-        0 0 30px rgba(247, 147, 26, 0.5),
-        0 0 60px rgba(0, 180, 255, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.1);
-      max-width: 500px;
+        0 0 50px rgba(247, 147, 26, 0.7),
+        0 0 100px rgba(0, 180, 255, 0.5),
+        inset 0 0 30px rgba(255, 255, 255, 0.2);
+      max-width: 600px;
+      width: 90%;
       animation: secretCodeReveal 0.8s ease-out, secretCodeGlow 2s infinite ease-in-out;
       position: relative;
       overflow: hidden;
+      transform: scale(1);
     }
 
     #secret-code-content::before {
@@ -954,21 +958,6 @@
           </div>
         </div>
 
-        <div id="secret-code-popup" style="display: none;">
-          <div id="secret-code-content">
-            <div id="secret-code-title">🎉 SECRET CODE UNLOCKED! 🎉</div>
-            <div id="secret-code-message"></div>
-            <div id="secret-code-display">
-              <div id="secret-code-value"></div>
-              <button id="copy-code-btn">📋 Copy Code</button>
-            </div>
-            <div id="secret-code-actions">
-              <button id="share-twitter-btn">🐦 Share on Twitter</button>
-              <button id="share-generic-btn">📱 Share Achievement</button>
-              <button id="close-popup-btn">Continue Playing</button>
-            </div>
-          </div>
-        </div>
 
         <div id="game-status">
           <div style="display: flex; align-items: center;">
@@ -1005,6 +994,24 @@
       </div>
     </div>
   </div>
+  
+  <!-- Secret Code Popup - Outside game-ui to prevent scaling issues -->
+  <div id="secret-code-popup" style="display: none;">
+    <div id="secret-code-content">
+      <div id="secret-code-title">🎉 SECRET CODE UNLOCKED! 🎉</div>
+      <div id="secret-code-message"></div>
+      <div id="secret-code-display">
+        <div id="secret-code-value"></div>
+        <button id="copy-code-btn">📋 Copy Code</button>
+      </div>
+      <div id="secret-code-actions">
+        <button id="share-twitter-btn">🐦 Share on Twitter</button>
+        <button id="share-generic-btn">📱 Share Achievement</button>
+        <button id="close-popup-btn">Continue Playing</button>
+      </div>
+    </div>
+  </div>
+  
   <script type="text/javascript" src="./matter.js"></script>
   <script type="module" src="./index.js?v=11"></script>
 </body>
