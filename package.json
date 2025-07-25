@@ -1,0 +1,30 @@
+{
+  "name": "suika-game",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "![](./screenshot.png)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "python3 -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "deploy-check": "node deploy-check.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moonfloof/suika-game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moonfloof/suika-game/issues"
+  },
+  "homepage": "https://github.com/moonfloof/suika-game#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.52.1",
+    "canvas": "^3.1.2",
+    "form-data": "^4.0.4",
+    "node-fetch": "^2.7.0"
+  }
+}

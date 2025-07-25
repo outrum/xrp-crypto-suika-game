@@ -3,21 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suika / Watermelon Game Clone</title>
-  <meta property="og:title" content="Suika / Watermelon Game Clone" />
+  <title>XRP Crypto Meme Suika - To the Moon! 🚀</title>
+  <meta property="og:title" content="XRP Crypto Meme Suika - HODL and Drop!" />
   <meta property="og:image" content="https://tombofry.github.io/suika-game/screenshot.png" />
   <style>
     @import url(https://fonts.bunny.net/css?family=azeret-mono:400,700,900);
 
     :root {
-      --col-bg: #FFD59D;
-      --col-bg-light: #FFDCAE;
-      --col-bg-lighter: #FFEEDB;
-      --col-primary: #FF5300;
-      --col-primary-dark: #FF2700;
-      --col-primary-light: #FF8800;
-      --col-shadow: rgba(0, 0, 0, 0.25);
+      --col-bg: #0C152E;
+      --col-bg-light: #1A2A4A;
+      --col-bg-lighter: #2A3F6A;
+      --col-primary: #0076C0;
+      --col-primary-dark: #005A9C;
+      --col-primary-light: #5AC8FA;
+      --col-shadow: rgba(0, 0, 0, 0.5);
       --col-white: #fff;
+      --col-xrp: #23292F;
+      --col-xrp-light: #5AC8FA;
+      --col-xrp-accent: #00B4FF;
+      --col-crypto-green: #25D366;
+      --col-crypto-gold: #F7931A;
+      --col-crypto-gradient: linear-gradient(135deg, var(--col-xrp-accent) 0%, var(--col-primary) 100%);
+      --col-crypto-glow: 0 0 15px var(--col-xrp-accent);
     }
 
     * {
@@ -30,6 +37,10 @@
     body {
       background-color: var(--col-bg);
       font-family: 'Azeret Mono', sans-serif;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 180, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(0, 118, 192, 0.1) 0%, transparent 50%);
+      color: var(--col-white);
     }
 
     .container {
@@ -41,6 +52,10 @@
 
     #game-canvas {
       position: relative;
+      background: radial-gradient(circle at center, var(--col-bg-light) 0%, var(--col-bg) 100%);
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%2300B4FF" stroke-width="1" fill="none" opacity="0.1"/><path d="M30,50 L70,50 M50,30 L50,70" stroke="%2300B4FF" stroke-width="1" opacity="0.1"/></svg>');
+      background-size: 100px 100px;
+      box-shadow: inset 0 0 50px rgba(0, 180, 255, 0.2);
     }
 
     #game-ui {
@@ -56,13 +71,21 @@
 
     #game-score {
       position: absolute;
-      width: 100%;
-      border-bottom: 2px dotted #333;
-      font-size: 84px;
+      top: 16px;
+      left: 16px;
+      max-width: 300px;
+      padding: 8px 16px;
+      font-size: 32px;
       font-weight: 900;
-      padding-left: 16px;
-      color: var(--col-bg-lighter);
-      text-shadow: 3px 3px 0 var(--col-primary), -3px -3px 0 var(--col-primary), -3px 3px 0 var(--col-primary), 3px -3px 0 var(--col-primary);
+      color: var(--col-white);
+      text-shadow: 2px 2px 0 var(--col-primary), -2px -2px 0 var(--col-primary), -2px 2px 0 var(--col-primary), 2px -2px 0 var(--col-primary);
+      background: rgba(12, 21, 46, 0.8);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,180,255,0.4);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      pointer-events: none;
     }
 
     #game-end-container {
@@ -71,26 +94,47 @@
       height: 100%;
       display: flex;
       align-items: center;
-      justify-items: center;
+      justify-content: center;
       background-color: var(--col-shadow);
+      backdrop-filter: blur(5px);
+      z-index: 500;
     }
 
     #game-end {
       text-align: center;
       padding: 32px 48px;
       background-color: var(--col-bg-lighter);
-      border: 5px solid var(--col-primary);
-      box-shadow: 0 4px 32px var(--col-shadow);
+      border: 5px solid var(--col-xrp-accent);
+      box-shadow: 0 4px 32px var(--col-shadow), var(--col-crypto-glow);
       border-radius: 32px;
       margin: 0 auto;
       pointer-events: initial;
       user-select: initial;
+      background-image: var(--col-crypto-gradient);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 4px 32px var(--col-shadow), 0 0 5px var(--col-xrp-accent); }
+      50% { box-shadow: 0 4px 32px var(--col-shadow), 0 0 20px var(--col-xrp-accent); }
+      100% { box-shadow: 0 4px 32px var(--col-shadow), 0 0 5px var(--col-xrp-accent); }
     }
 
     #game-end-title {
       font-weight: 700;
       font-size: 48px;
-      color: var(--col-primary-dark);
+      color: var(--col-white);
+      text-shadow: 0 0 10px var(--col-xrp-accent);
+      margin-bottom: 8px;
+    }
+    
+    #game-end-subtitle {
+      font-weight: 400;
+      font-size: 18px;
+      color: var(--col-xrp-light);
+      text-shadow: 0 0 5px var(--col-xrp-accent);
+      margin-bottom: 16px;
+      opacity: 0.9;
     }
 
     #game-end-link {
@@ -98,16 +142,21 @@
       color: var(--col-white);
       font-size: 24px;
       text-decoration: none;
-      background-color: var(--col-primary-light);
+      background-color: var(--col-primary);
       margin-top: 16px;
       padding: 16px;
       border-radius: 16px;
-      box-shadow: 4px 4px 0 var(--col-shadow);
+      box-shadow: 4px 4px 0 var(--col-shadow), 0 0 10px var(--col-xrp-accent);
+      transition: all 0.2s ease;
+      border: 2px solid var(--col-xrp-accent);
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
     #game-end-link:hover {
-      background-color: var(--col-primary);
-      box-shadow: 6px 6px 0 var(--col-shadow);
+      background-color: var(--col-primary-light);
+      box-shadow: 6px 6px 0 var(--col-shadow), 0 0 15px var(--col-xrp-accent);
+      transform: translateY(-2px);
     }
 
     #game-status {
@@ -115,9 +164,16 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 48px;
+      height: 60px;
       background-color: var(--col-bg-lighter);
       display: flex;
+      align-items: center;
+      border-top: 2px solid var(--col-xrp-accent);
+      box-shadow: 0 -2px 10px rgba(0,180,255,0.2);
+      background-image: linear-gradient(90deg, rgba(0,118,192,0.3) 0%, rgba(0,180,255,0.2) 100%);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      overflow: hidden;
     }
 
     .game-status-item {
@@ -125,24 +181,734 @@
       line-height: 1;
       align-items: center;
       margin-right: 32px;
+      flex-shrink: 0;
+      min-width: 0;
     }
 
     .game-status-label {
-      color: #666;
+      color: var(--col-white);
       font-size: 16px;
       margin-left: 24px;
       margin-right: 8px;
+      text-shadow: 0 0 5px var(--col-xrp-accent);
     }
 
     #game-highscore-value {
-      color: #333;
+      color: var(--col-white);
       font-weight: 700;
       font-size: 24px;
+      text-shadow: 0 0 8px var(--col-xrp-accent);
+    }
+    
+    #validator-status {
+      color: var(--col-crypto-green);
+      font-weight: 700;
+      font-size: 18px;
+      text-shadow: 0 0 8px var(--col-crypto-green);
+    }
+
+    @keyframes validatorPulse {
+      0% { 
+        transform: scale(1);
+        text-shadow: 0 0 15px var(--col-crypto-gold), 0 0 25px rgba(247, 147, 26, 0.5);
+      }
+      50% { 
+        transform: scale(1.05);
+        text-shadow: 0 0 20px var(--col-crypto-gold), 0 0 35px rgba(247, 147, 26, 0.8);
+      }
+      100% { 
+        transform: scale(1);
+        text-shadow: 0 0 15px var(--col-crypto-gold), 0 0 25px rgba(247, 147, 26, 0.5);
+      }
+    }
+
+    /* Validator Achievement Styles */
+    #validator-achievement {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background: linear-gradient(135deg, var(--col-crypto-gold) 0%, var(--col-xrp-accent) 100%);
+      border: 3px solid var(--col-crypto-gold);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 
+        0 0 30px rgba(247, 147, 26, 0.8),
+        0 0 60px rgba(0, 180, 255, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.2);
+      animation: validatorAchievementReveal 1.5s ease-out, validatorGlow 3s infinite ease-in-out;
+      backdrop-filter: blur(5px);
+      z-index: 300;
+      pointer-events: initial;
+    }
+
+    #validator-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    #validator-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--col-white);
+      text-shadow: 
+        0 0 10px var(--col-crypto-gold),
+        2px 2px 0 var(--col-bg),
+        -2px -2px 0 var(--col-bg),
+        2px -2px 0 var(--col-bg),
+        -2px 2px 0 var(--col-bg);
+      margin-bottom: 10px;
+      animation: validatorTitlePulse 2s infinite ease-in-out;
+    }
+
+    #validator-message {
+      font-size: 14px;
+      color: var(--col-white);
+      margin-bottom: 12px;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+      line-height: 1.3;
+    }
+
+    #validator-badge {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--col-crypto-gold);
+      text-shadow: 
+        0 0 15px var(--col-crypto-gold),
+        0 0 25px rgba(247, 147, 26, 0.5);
+      animation: validatorBadgePulse 1.5s infinite ease-in-out;
+      letter-spacing: 1px;
+    }
+
+    @keyframes validatorAchievementReveal {
+      0% {
+        transform: scale(0.3) rotate(-10deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1) rotate(2deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes validatorGlow {
+      0% { 
+        box-shadow: 
+          0 0 30px rgba(247, 147, 26, 0.8),
+          0 0 60px rgba(0, 180, 255, 0.4),
+          inset 0 0 20px rgba(255, 255, 255, 0.2);
+      }
+      50% { 
+        box-shadow: 
+          0 0 40px rgba(247, 147, 26, 1),
+          0 0 80px rgba(0, 180, 255, 0.6),
+          inset 0 0 30px rgba(255, 255, 255, 0.3);
+      }
+      100% { 
+        box-shadow: 
+          0 0 30px rgba(247, 147, 26, 0.8),
+          0 0 60px rgba(0, 180, 255, 0.4),
+          inset 0 0 20px rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    @keyframes validatorTitlePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes validatorBadgePulse {
+      0% { 
+        transform: scale(1);
+        text-shadow: 0 0 15px var(--col-crypto-gold), 0 0 25px rgba(247, 147, 26, 0.5);
+      }
+      50% { 
+        transform: scale(1.05);
+        text-shadow: 0 0 20px var(--col-crypto-gold), 0 0 35px rgba(247, 147, 26, 0.8);
+      }
+      100% { 
+        transform: scale(1);
+        text-shadow: 0 0 15px var(--col-crypto-gold), 0 0 25px rgba(247, 147, 26, 0.5);
+      }
     }
 
     #game-next-fruit {
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 5px var(--col-xrp-accent)) drop-shadow(0 0 10px rgba(0,180,255,0.3));
+      animation: float 2s infinite ease-in-out, glow 3s infinite ease-in-out;
+      border: 2px solid rgba(0,180,255,0.3);
+      background: radial-gradient(circle at center, rgba(0,180,255,0.1) 0%, transparent 70%);
+      transition: all 0.3s ease;
+    }
+    
+    #game-next-fruit:hover {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 8px var(--col-xrp-accent)) drop-shadow(0 0 15px rgba(0,180,255,0.5));
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px rgba(0,180,255,0.3); }
+      50% { box-shadow: 0 0 15px rgba(0,180,255,0.6), 0 0 25px rgba(0,180,255,0.3); }
+      100% { box-shadow: 0 0 5px rgba(0,180,255,0.3); }
+    }
+
+    /* Secret Code Popup Styles */
+    #secret-code-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      pointer-events: initial;
+      user-select: initial;
+    }
+
+    #secret-code-content {
+      text-align: center;
+      padding: 40px;
+      background: var(--col-crypto-gradient);
+      border: 3px solid var(--col-crypto-gold);
+      border-radius: 20px;
+      box-shadow: 
+        0 0 30px rgba(247, 147, 26, 0.5),
+        0 0 60px rgba(0, 180, 255, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+      max-width: 500px;
+      animation: secretCodeReveal 0.8s ease-out, secretCodeGlow 2s infinite ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #secret-code-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: secretCodeShine 3s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes secretCodeReveal {
+      0% {
+        transform: scale(0.5) rotate(-10deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1) rotate(2deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes secretCodeGlow {
+      0% { box-shadow: 0 0 30px rgba(247, 147, 26, 0.5), 0 0 60px rgba(0, 180, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1); }
+      50% { box-shadow: 0 0 40px rgba(247, 147, 26, 0.8), 0 0 80px rgba(0, 180, 255, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.2); }
+      100% { box-shadow: 0 0 30px rgba(247, 147, 26, 0.5), 0 0 60px rgba(0, 180, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1); }
+    }
+
+    @keyframes secretCodeShine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    #secret-code-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--col-crypto-gold);
+      text-shadow: 
+        0 0 10px var(--col-crypto-gold),
+        2px 2px 0 var(--col-bg),
+        -2px -2px 0 var(--col-bg),
+        2px -2px 0 var(--col-bg),
+        -2px 2px 0 var(--col-bg);
+      margin-bottom: 20px;
+      animation: titlePulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes titlePulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    #secret-code-message {
+      font-size: 18px;
+      color: var(--col-white);
+      margin-bottom: 25px;
+      text-shadow: 0 0 5px rgba(0, 180, 255, 0.8);
+      line-height: 1.4;
+    }
+
+    #secret-code-display {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid var(--col-crypto-gold);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    #secret-code-value {
+      font-family: 'Courier New', monospace;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--col-crypto-gold);
+      text-shadow: 0 0 10px var(--col-crypto-gold);
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+      word-break: break-all;
+      animation: codeFlicker 2s infinite ease-in-out;
+    }
+
+    @keyframes codeFlicker {
+      0% { opacity: 1; }
+      95% { opacity: 1; }
+      97% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+
+    #copy-code-btn {
+      background: var(--col-primary);
+      color: var(--col-white);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    #copy-code-btn:hover {
+      background: var(--col-primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 180, 255, 0.4);
+    }
+
+    #copy-code-btn.copied {
+      background: var(--col-crypto-green);
+      border-color: var(--col-crypto-green);
+    }
+
+    #secret-code-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    #secret-code-actions button {
+      background: var(--col-bg-lighter);
+      color: var(--col-white);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    #share-twitter-btn {
+      background: #1DA1F2;
+      border-color: #1DA1F2;
+    }
+
+    #share-twitter-btn:hover {
+      background: #0d8bd9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(29, 161, 242, 0.4);
+    }
+
+    #share-generic-btn {
+      background: var(--col-crypto-green);
+      border-color: var(--col-crypto-green);
+    }
+
+    #share-generic-btn:hover {
+      background: #1ea952;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    }
+
+    #close-popup-btn:hover {
+      background: var(--col-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 180, 255, 0.4);
+    }
+
+    /* Progress Bar Styles */
+    #progress-container {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 200px;
+      background: rgba(26, 42, 74, 0.9);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 15px;
+      padding: 12px 16px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+      z-index: 150;
+      pointer-events: none;
+    }
+
+    #progress-label {
+      color: var(--col-white);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      text-shadow: 0 0 5px var(--col-xrp-accent);
+    }
+
+    #progress-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #progress-bar {
+      flex: 1;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--col-crypto-green) 0%, var(--col-xrp-accent) 50%, var(--col-crypto-gold) 100%);
+      border-radius: 8px;
+      transition: width 0.5s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    #progress-text {
+      color: var(--col-white);
+      font-size: 14px;
+      font-weight: 700;
+      min-width: 40px;
+      text-align: center;
+      text-shadow: 0 0 5px var(--col-xrp-accent);
+    }
+
+    /* Progress bar pulsing effect when approaching threshold */
+    #progress-container.approaching-threshold {
+      animation: progressPulse 1s infinite ease-in-out;
+    }
+
+    #progress-container.approaching-threshold #progress-fill {
+      box-shadow: 0 0 20px var(--col-crypto-gold), 0 0 30px rgba(247, 147, 26, 0.5);
+      animation: progressFillPulse 0.8s infinite ease-in-out;
+    }
+
+    #progress-container.approaching-threshold #progress-text {
+      animation: textGlow 1.2s infinite ease-in-out;
+      color: var(--col-crypto-gold);
+    }
+
+    #progress-container.approaching-threshold #progress-label {
+      animation: labelFlash 1.5s infinite ease-in-out;
+      color: var(--col-crypto-gold);
+    }
+
+    @keyframes progressPulse {
+      0% { 
+        border-color: var(--col-xrp-accent);
+        box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+      }
+      50% { 
+        border-color: var(--col-crypto-gold);
+        box-shadow: 0 0 25px rgba(247, 147, 26, 0.6);
+      }
+      100% { 
+        border-color: var(--col-xrp-accent);
+        box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+      }
+    }
+
+    @keyframes progressFillPulse {
+      0% { 
+        background: linear-gradient(90deg, var(--col-crypto-green) 0%, var(--col-xrp-accent) 50%, var(--col-crypto-gold) 100%);
+      }
+      50% { 
+        background: linear-gradient(90deg, var(--col-crypto-gold) 0%, var(--col-crypto-gold) 50%, var(--col-crypto-gold) 100%);
+      }
+      100% { 
+        background: linear-gradient(90deg, var(--col-crypto-green) 0%, var(--col-xrp-accent) 50%, var(--col-crypto-gold) 100%);
+      }
+    }
+
+    @keyframes textGlow {
+      0% { 
+        text-shadow: 0 0 5px var(--col-xrp-accent);
+        transform: scale(1);
+      }
+      50% { 
+        text-shadow: 0 0 15px var(--col-crypto-gold), 0 0 25px rgba(247, 147, 26, 0.5);
+        transform: scale(1.1);
+      }
+      100% { 
+        text-shadow: 0 0 5px var(--col-xrp-accent);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes labelFlash {
+      0% { 
+        text-shadow: 0 0 5px var(--col-xrp-accent);
+      }
+      25% { 
+        text-shadow: 0 0 10px var(--col-crypto-gold);
+      }
+      50% { 
+        text-shadow: 0 0 15px var(--col-crypto-gold), 0 0 25px rgba(247, 147, 26, 0.5);
+      }
+      75% { 
+        text-shadow: 0 0 10px var(--col-crypto-gold);
+      }
+      100% { 
+        text-shadow: 0 0 5px var(--col-xrp-accent);
+      }
+    }
+
+    /* Responsive Design for Mobile and Small Screens */
+    @media (max-width: 768px) {
+      #game-score {
+        font-size: 24px;
+        padding: 6px 12px;
+        top: 12px;
+        left: 12px;
+        max-width: 200px;
+      }
+
+      #game-status {
+        height: 50px;
+      }
+
+      .game-status-label {
+        font-size: 14px;
+        margin-left: 12px;
+        margin-right: 6px;
+      }
+
+      #game-highscore-value {
+        font-size: 20px;
+      }
+
+      #validator-status {
+        font-size: 16px;
+      }
+
+      #game-next-fruit {
+        width: 28px;
+        height: 28px;
+      }
+
+      #progress-container {
+        width: 160px;
+        padding: 8px 12px;
+        right: 8px;
+      }
+
+      #progress-label {
+        font-size: 12px;
+      }
+
+      #validator-achievement {
+        width: 250px;
+        padding: 16px;
+      }
+
+      #validator-title {
+        font-size: 18px;
+      }
+
+      #validator-message {
+        font-size: 12px;
+      }
+
+      #secret-code-content {
+        padding: 20px;
+        margin: 0 16px;
+        max-width: calc(100vw - 32px);
+      }
+
+      #secret-code-title {
+        font-size: 24px;
+      }
+
+      #secret-code-message {
+        font-size: 16px;
+      }
+
+      #secret-code-value {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #game-score {
+        font-size: 20px;
+        padding: 4px 8px;
+        top: 8px;
+        left: 8px;
+        max-width: 150px;
+      }
+
+      .game-status-item {
+        margin-right: 16px;
+      }
+
+      .game-status-label {
+        font-size: 12px;
+        margin-left: 8px;
+        margin-right: 4px;
+      }
+
+      #game-highscore-value {
+        font-size: 18px;
+      }
+
+      #validator-status {
+        font-size: 14px;
+      }
+
+      #game-next-fruit {
+        width: 24px;
+        height: 24px;
+      }
+
+      #progress-container {
+        width: 140px;
+        padding: 6px 8px;
+        right: 4px;
+      }
+
+      #progress-label {
+        font-size: 10px;
+      }
+
+      #validator-achievement {
+        width: 200px;
+        padding: 12px;
+      }
+
+      #validator-title {
+        font-size: 16px;
+      }
+
+      #validator-message {
+        font-size: 11px;
+      }
+
+      #secret-code-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #secret-code-actions button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+
+    /* Threshold reached celebration effect */
+    #progress-container.threshold-reached {
+      animation: thresholdCelebration 1s ease-out;
+    }
+
+    #progress-container.threshold-reached #progress-fill {
+      animation: fillCelebration 1s ease-out;
+    }
+
+    @keyframes thresholdCelebration {
+      0% { 
+        transform: scale(1);
+        border-color: var(--col-crypto-gold);
+        box-shadow: 0 0 25px rgba(247, 147, 26, 0.6);
+      }
+      25% { 
+        transform: scale(1.05);
+        border-color: var(--col-crypto-gold);
+        box-shadow: 0 0 40px rgba(247, 147, 26, 0.8);
+      }
+      50% { 
+        transform: scale(1.02);
+        border-color: var(--col-crypto-gold);
+        box-shadow: 0 0 50px rgba(247, 147, 26, 1);
+      }
+      100% { 
+        transform: scale(1);
+        border-color: var(--col-xrp-accent);
+        box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+      }
+    }
+
+    @keyframes fillCelebration {
+      0% { 
+        background: linear-gradient(90deg, var(--col-crypto-gold) 0%, var(--col-crypto-gold) 100%);
+        box-shadow: 0 0 20px var(--col-crypto-gold);
+      }
+      50% { 
+        background: linear-gradient(90deg, var(--col-crypto-gold) 0%, var(--col-white) 50%, var(--col-crypto-gold) 100%);
+        box-shadow: 0 0 30px var(--col-crypto-gold), 0 0 50px rgba(247, 147, 26, 0.8);
+      }
+      100% { 
+        background: linear-gradient(90deg, var(--col-crypto-green) 0%, var(--col-xrp-accent) 50%, var(--col-crypto-gold) 100%);
+        box-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+      }
     }
   </style>
 </head>
@@ -154,25 +920,64 @@
 
         <div id="game-end-container">
           <div id="game-end">
-            <div id="game-end-title">Game Over!</div>
-            <a id="game-end-link" href="">Try Again</a>
+            <div id="game-end-title">Ledger Closed!</div>
+            <div id="game-end-subtitle" style="font-size: 18px; color: var(--col-xrp-light); margin-bottom: 8px;">Time to HODL and try again! 🚀</div>
+            <a id="game-end-link" href="">To the Moon! 🌙</a>
+          </div>
+        </div>
+
+        <div id="secret-code-popup" style="display: none;">
+          <div id="secret-code-content">
+            <div id="secret-code-title">🎉 SECRET CODE UNLOCKED! 🎉</div>
+            <div id="secret-code-message"></div>
+            <div id="secret-code-display">
+              <div id="secret-code-value"></div>
+              <button id="copy-code-btn">📋 Copy Code</button>
+            </div>
+            <div id="secret-code-actions">
+              <button id="share-twitter-btn">🐦 Share on Twitter</button>
+              <button id="share-generic-btn">📱 Share Achievement</button>
+              <button id="close-popup-btn">Continue Playing</button>
+            </div>
           </div>
         </div>
 
         <div id="game-status">
           <div class="game-status-item">
-            <div class="game-status-label">Highscore</div>
+            <div class="game-status-label">High Score 🏆</div>
             <div id="game-highscore-value">0</div>
           </div>
           <div class="game-status-item">
-            <div class="game-status-label">Next</div>
-            <img id="game-next-fruit" src="./assets/img/circle0.png" />
+            <div class="game-status-label">Next Drop 📦</div>
+            <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
+          </div>
+          <div class="game-status-item">
+            <div class="game-status-label">Whale Status 🐋</div>
+            <div id="validator-status">Pending</div>
+          </div>
+        </div>
+
+        <div id="progress-container">
+          <div id="progress-label">Progress to Next Code</div>
+          <div id="progress-bar-container">
+            <div id="progress-bar">
+              <div id="progress-fill"></div>
+            </div>
+            <div id="progress-text">0%</div>
+          </div>
+        </div>
+
+        <div id="validator-achievement" style="display: none;">
+          <div id="validator-content">
+            <div id="validator-title">🏆 XRP VALIDATOR ACHIEVED! 🏆</div>
+            <div id="validator-message">All secret codes unlocked! You are now a certified XRP Validator!</div>
+            <div id="validator-badge">⚡👑 VALIDATOR STATUS ⚡👑</div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <script type="text/javascript" src="./matter.js"></script>
-  <script type="text/javascript" src="./index.js?v=4"></script>
+  <script type="module" src="./index.js?v=11"></script>
 </body>
 </html>

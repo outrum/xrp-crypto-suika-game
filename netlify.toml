@@ -1,0 +1,64 @@
+# Netlify configuration for XRP Crypto Meme Suika Game
+# This is a static site deployment with no build process required
+
+[build]
+  # No build command needed for static site
+  publish = "."
+  # Command to run before build (if needed)
+  command = ""
+  
+[build.environment]
+  # Environment variables for Supabase integration
+  VITE_SUPABASE_URL = ""
+  VITE_SUPABASE_ANON_KEY = ""
+  # Environment variable for Ideogram API (from design document)
+  IDEOGRAM_API_KEY = "QIX2yPBqTSSjSVPtjsayIM9o87KaxtPW4c-QvcI_VMCVdKiWM91b-EFjQoMErS7z8QTuQDlEASZ8YnBylL6QZA"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache audio files
+[[headers]]
+  for = "*.mp3"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache image files
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache JavaScript files
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Handle 404s by serving index.html (for single page app behavior)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment-specific settings
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+
+[context.branch-deploy.environment]
+  NODE_ENV = "development"
