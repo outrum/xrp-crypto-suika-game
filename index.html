@@ -71,21 +71,22 @@
 
     #game-score {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      max-width: 300px;
-      padding: 8px 16px;
-      font-size: 32px;
+      top: 8px;
+      left: 8px;
+      padding: 4px 12px;
+      font-size: 20px;
       font-weight: 900;
       color: var(--col-white);
-      text-shadow: 2px 2px 0 var(--col-primary), -2px -2px 0 var(--col-primary), -2px 2px 0 var(--col-primary), 2px -2px 0 var(--col-primary);
-      background: rgba(12, 21, 46, 0.8);
-      border: 2px solid var(--col-xrp-accent);
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,180,255,0.4);
-      backdrop-filter: blur(10px);
+      text-shadow: 1px 1px 0 var(--col-primary);
+      background: rgba(12, 21, 46, 0.9);
+      border: 1px solid var(--col-xrp-accent);
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,180,255,0.3);
+      backdrop-filter: blur(8px);
       z-index: 100;
       pointer-events: none;
+      min-width: 80px;
+      text-align: center;
     }
 
     #game-end-container {
@@ -164,33 +165,37 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 60px;
+      height: 40px;
       background-color: var(--col-bg-lighter);
       display: flex;
       align-items: center;
-      border-top: 2px solid var(--col-xrp-accent);
-      box-shadow: 0 -2px 10px rgba(0,180,255,0.2);
-      background-image: linear-gradient(90deg, rgba(0,118,192,0.3) 0%, rgba(0,180,255,0.2) 100%);
-      backdrop-filter: blur(5px);
+      justify-content: space-between;
+      border-top: 1px solid var(--col-xrp-accent);
+      box-shadow: 0 -1px 8px rgba(0,180,255,0.15);
+      background-image: linear-gradient(90deg, rgba(0,118,192,0.2) 0%, rgba(0,180,255,0.1) 100%);
+      backdrop-filter: blur(8px);
       z-index: 200;
       overflow: hidden;
+      padding: 0 8px;
     }
 
     .game-status-item {
       display: flex;
       line-height: 1;
       align-items: center;
-      margin-right: 32px;
+      margin-right: 16px;
       flex-shrink: 0;
       min-width: 0;
     }
 
     .game-status-label {
       color: var(--col-white);
-      font-size: 16px;
-      margin-left: 24px;
-      margin-right: 8px;
-      text-shadow: 0 0 5px var(--col-xrp-accent);
+      font-size: 12px;
+      margin-left: 12px;
+      margin-right: 6px;
+      text-shadow: 0 0 3px var(--col-xrp-accent);
+      font-weight: 600;
+      opacity: 0.9;
     }
 
     #game-highscore-value {
@@ -339,14 +344,23 @@
     }
 
     #game-next-fruit {
-      width: 32px;
-      height: 32px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      filter: drop-shadow(0 0 5px var(--col-xrp-accent)) drop-shadow(0 0 10px rgba(0,180,255,0.3));
+      filter: drop-shadow(0 0 3px var(--col-xrp-accent)) drop-shadow(0 0 6px rgba(0,180,255,0.3));
       animation: float 2s infinite ease-in-out, glow 3s infinite ease-in-out;
-      border: 2px solid rgba(0,180,255,0.3);
+      border: 1px solid rgba(0,180,255,0.3);
       background: radial-gradient(circle at center, rgba(0,180,255,0.1) 0%, transparent 70%);
       transition: all 0.3s ease;
+    }
+
+    #progress-text {
+      color: var(--col-white);
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 30px;
+      text-align: right;
+      opacity: 0.9;
     }
     
     #game-next-fruit:hover {
@@ -564,21 +578,35 @@
       box-shadow: 0 4px 15px rgba(0, 180, 255, 0.4);
     }
 
-    /* Progress Bar Styles */
+    /* Hide old floating progress bar */
     #progress-container {
-      position: absolute;
-      right: 16px;
-      top: 40%;
-      transform: translateY(-50%);
-      width: 200px;
-      background: rgba(26, 42, 74, 0.9);
-      border: 2px solid var(--col-xrp-accent);
-      border-radius: 15px;
-      padding: 12px 16px;
-      backdrop-filter: blur(5px);
-      box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
-      z-index: 150;
-      pointer-events: none;
+      display: none;
+    }
+
+    /* Inline Progress Bar in Status Bar */
+    #progress-container-inline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 8px;
+    }
+
+    #progress-label-inline {
+      color: var(--col-white);
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    #progress-bar-inline {
+      width: 80px;
+      height: 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--col-xrp-accent);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
     }
 
     #progress-label {
@@ -943,24 +971,24 @@
         </div>
 
         <div id="game-status">
-          <div class="game-status-item">
-            <div class="game-status-label">High Score 🏆</div>
-            <div id="game-highscore-value">0</div>
+          <div style="display: flex; align-items: center;">
+            <div class="game-status-item">
+              <div class="game-status-label">🏆</div>
+              <div id="game-highscore-value">0</div>
+            </div>
+            <div class="game-status-item">
+              <div class="game-status-label">📦</div>
+              <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
+            </div>
+            <div class="game-status-item">
+              <div class="game-status-label">🐋</div>
+              <div id="validator-status">Pending</div>
+            </div>
           </div>
-          <div class="game-status-item">
-            <div class="game-status-label">Next Drop 📦</div>
-            <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
-          </div>
-          <div class="game-status-item">
-            <div class="game-status-label">Whale Status 🐋</div>
-            <div id="validator-status">Pending</div>
-          </div>
-        </div>
-
-        <div id="progress-container">
-          <div id="progress-label">Progress to Next Code</div>
-          <div id="progress-bar-container">
-            <div id="progress-bar">
+          
+          <div id="progress-container-inline">
+            <div id="progress-label-inline">Next Code</div>
+            <div id="progress-bar-inline">
               <div id="progress-fill"></div>
             </div>
             <div id="progress-text">0%</div>

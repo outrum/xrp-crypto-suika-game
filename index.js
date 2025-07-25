@@ -57,9 +57,9 @@ const Game = {
 		shareTwitterBtn: document.getElementById('share-twitter-btn'),
 		shareGenericBtn: document.getElementById('share-generic-btn'),
 		closePopupBtn: document.getElementById('close-popup-btn'),
-		progressContainer: document.getElementById('progress-container'),
-		progressLabel: document.getElementById('progress-label'),
-		progressBar: document.getElementById('progress-bar'),
+		progressContainer: document.getElementById('progress-container-inline'),
+		progressLabel: document.getElementById('progress-label-inline'),
+		progressBar: document.getElementById('progress-bar-inline'),
 		progressFill: document.getElementById('progress-fill'),
 		progressText: document.getElementById('progress-text'),
 		validatorAchievement: document.getElementById('validator-achievement'),
@@ -1287,11 +1287,8 @@ const render = Render.create({
 	options: {
 		width: Game.width,
 		height: Game.height,
-		wireframes: true,
-		background: '#0C152E',
-		showDebug: true,
-		showCollisions: true,
-		showVelocity: true
+		wireframes: false,
+		background: '#0C152E'
 	}
 });
 
