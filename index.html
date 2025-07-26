@@ -294,30 +294,10 @@
       font-weight: 600;
     }
 
-    #token-preview-labels {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 240px;
-      padding: 0 140px;
-    }
-
-    .token-label {
-      font-size: 14px;
-      color: var(--col-white);
-      background: rgba(0, 0, 0, 0.6);
-      padding: 6px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--col-xrp-accent);
-      text-align: center;
-      font-weight: 600;
-      box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
-      backdrop-filter: blur(5px);
-    }
 
     #start-button-text {
       position: absolute;
-      top: 75%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 24px;
@@ -340,7 +320,10 @@
 
     #game-instructions {
       text-align: center;
-      margin-bottom: 140px;
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      right: 0;
     }
 
     #game-instructions p {
@@ -995,11 +978,6 @@
             <p id="sub-title">🚀 Stack • Merge • Moon! 🌙</p>
           </div>
           
-          <div id="token-preview-labels">
-            <div class="token-label">Baby Ripple</div>
-            <div class="token-label">HODL Shield</div>
-            <div class="token-label">Crypto Galaxy</div>
-          </div>
           
           <div id="start-button-text" onclick="Game.startGame()">
             <span>🎮 START GAME 🎮</span>

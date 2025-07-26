@@ -331,9 +331,8 @@ const Game = {
 		Game.elements.startScreenOverlay.style.display = 'flex';
 		Game.elements.ui.style.display = 'none';
 		
-		// Switch to menu world  
+		// Clear the world but don't add any physics bodies
 		Composite.clear(engine.world);
-		Composite.add(engine.world, menuStatics);
 		
 		console.log('📱 Showing start screen');
 	},
@@ -1121,16 +1120,7 @@ const Game = {
 			Game.elements.shareTwitterBtn.addEventListener('click', Game.shareOnTwitter);
 			Game.elements.shareGenericBtn.addEventListener('click', Game.shareGeneric);
 
-			const menuMouseDown = function () {
-				if (mouseConstraint.body === null || mouseConstraint.body?.label !== 'btn-start') {
-					return;
-				}
-
-				Events.off(mouseConstraint, 'mousedown', menuMouseDown);
-				Game.startGame();
-			}
-
-			Events.on(mouseConstraint, 'mousedown', menuMouseDown);
+			// Removed menu mouse handling - start screen is now pure HTML/CSS
 			
 			console.log('✅ Game initialized successfully!');
 			
@@ -1149,7 +1139,7 @@ const Game = {
 			gameStarted = true;
 		}
 
-		Composite.remove(engine.world, menuStatics);
+		// Clear any existing world bodies
 		Composite.add(engine.world, gameStatics);
 
 		Game.calculateScore();
@@ -1179,17 +1169,9 @@ const Game = {
 		}, 250);
 
 		Events.on(mouseConstraint, 'mouseup', function (e) {
-			// Handle start button click
+			// Don't handle clicks if we're on the menu
 			if (Game.state === GameStates.MENU) {
-				const bodies = Composite.allBodies(engine.world);
-				const startButton = bodies.find(body => body.label === 'btn-start');
-				if (startButton && e.mouse.position.x >= startButton.position.x - 150 && 
-					e.mouse.position.x <= startButton.position.x + 150 &&
-					e.mouse.position.y >= startButton.position.y - 40 && 
-					e.mouse.position.y <= startButton.position.y + 40) {
-					Game.startGame();
-					return;
-				}
+				return;
 			}
 			
 			// Handle fruit dropping
@@ -1358,6 +1340,8 @@ const render = Render.create({
 // Don't add menu statics or start physics until game actually starts
 let gameStarted = false;
 
+// Removed menuStatics - start screen is now pure HTML/CSS
+/*
 const menuStatics = [
 	// Game Title/Logo Area
 	Bodies.rectangle(Game.width / 2, 120, 400, 80, {
@@ -1413,6 +1397,7 @@ const menuStatics = [
 		},
 	}),
 ];
+*/
 
 const wallProps = {
 	isStatic: true,
