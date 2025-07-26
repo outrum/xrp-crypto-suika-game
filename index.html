@@ -324,8 +324,18 @@
       font-weight: 900;
       color: var(--col-white);
       text-shadow: 2px 2px 0 var(--col-primary);
-      pointer-events: none;
+      cursor: pointer;
       animation: buttonPulse 2s infinite ease-in-out;
+      padding: 15px 30px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,180,255,0.5);
+    }
+
+    #start-button-text:hover {
+      background: rgba(0, 180, 255, 0.2);
+      box-shadow: 0 0 25px rgba(0,180,255,0.8);
     }
 
     #game-instructions {
@@ -991,7 +1001,7 @@
             <div class="token-label">Crypto Galaxy</div>
           </div>
           
-          <div id="start-button-text">
+          <div id="start-button-text" onclick="Game.startGame()">
             <span>🎮 START GAME 🎮</span>
           </div>
           

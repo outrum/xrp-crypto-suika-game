@@ -291,6 +291,12 @@ const Game = {
 		Game.elements.startScreenOverlay.style.display = 'none';
 		Game.elements.ui.style.display = 'block';
 		
+		// Start physics engine if not already started
+		if (!gameStarted) {
+			Runner.run(runner, engine);
+			gameStarted = true;
+		}
+		
 		// Initialize game
 		Game.score = 0;
 		Game.elements.score.textContent = Game.score;
@@ -301,6 +307,21 @@ const Game = {
 		// Switch to game world
 		Composite.clear(engine.world);
 		Composite.add(engine.world, gameStatics);
+		
+		Game.calculateScore();
+		Game.updateWhaleStatus();
+		Game.updateProgressBar();
+		
+		// Initialize current token size and preview
+		Game.currentFruitSize = Game.nextFruitSize;
+		Game.setNextFruitSize();
+		
+		Game.elements.previewBall = Game.generateFruitBody(Game.width / 2, previewBallHeight, Game.currentFruitSize, { isStatic: true });
+		Composite.add(engine.world, Game.elements.previewBall);
+
+		setTimeout(() => {
+			Game.state = GameStates.READY;
+		}, 250);
 		
 		console.log('🎮 Game started!');
 	},
@@ -1078,11 +1099,9 @@ const Game = {
 			
 			console.log('🚀 Starting game engine...');
 			
-			// Only start rendering after images are loaded
+			// Only start rendering after images are loaded - but don't add menu statics yet
 			Render.run(render);
-			Runner.run(runner, engine);
-
-			Composite.add(engine.world, menuStatics);
+			// Don't start runner until game starts
 
 			Game.loadHighscore();
 			Game.elements.ui.style.display = 'none';
@@ -1123,6 +1142,12 @@ const Game = {
 
 	startGame: function () {
 		Game.sounds.click.play();
+		
+		// Start the physics engine now
+		if (!gameStarted) {
+			Runner.run(runner, engine);
+			gameStarted = true;
+		}
 
 		Composite.remove(engine.world, menuStatics);
 		Composite.add(engine.world, gameStatics);
@@ -1329,6 +1354,9 @@ const render = Render.create({
 		background: '#0C152E'
 	}
 });
+
+// Don't add menu statics or start physics until game actually starts
+let gameStarted = false;
 
 const menuStatics = [
 	// Game Title/Logo Area
