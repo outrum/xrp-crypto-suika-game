@@ -1459,9 +1459,16 @@ const resizeCanvas = () => {
 
 document.body.onload = () => {
 	resizeCanvas();
-	// Initialize game first
+	
+	// Show start screen immediately 
+	console.log('🔧 Showing start screen immediately');
+	Game.elements.startScreenOverlay.style.display = 'flex';
+	Game.elements.ui.style.display = 'none';
+	Game.state = GameStates.MENU;
+	
+	// Initialize game in background
 	Game.initGame().then(() => {
-		Game.showStartScreen();
+		console.log('✅ Game initialized - start screen should be visible');
 	}).catch(error => {
 		console.error('Failed to initialize game:', error);
 		// Fallback initialization without preloading
@@ -1469,7 +1476,6 @@ document.body.onload = () => {
 		Game.elements.ui.style.display = 'none';
 		Game.fruitsMerged = Array.apply(null, Array(Game.fruitSizes.length)).map(() => 0);
 		Game.elements.validatorStatus.innerText = 'Ready to HODL';
-		Game.showStartScreen();
 	});
 };
 document.body.onresize = resizeCanvas;
