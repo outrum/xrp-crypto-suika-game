@@ -150,32 +150,33 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 90px;
+      height: 120px;
       background-color: var(--col-bg-lighter);
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr 1fr 1fr 250px;
+      gap: 20px;
       align-items: center;
-      justify-content: space-between;
       border-top: 3px solid var(--col-xrp-accent);
       box-shadow: 0 -4px 20px rgba(0,180,255,0.3);
       background-image: linear-gradient(90deg, rgba(0,118,192,0.3) 0%, rgba(0,180,255,0.2) 100%);
       backdrop-filter: blur(15px);
       z-index: 200;
       overflow: hidden;
-      padding: 0 20px;
+      padding: 0 15px;
     }
     
     #game-score {
-      font-size: 36px;
+      font-size: 42px;
       font-weight: 900;
       color: var(--col-white);
       text-shadow: 2px 2px 0 var(--col-primary);
-      min-width: 160px;
       text-align: center;
-      padding: 10px 20px;
-      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.4);
       border: 2px solid var(--col-xrp-accent);
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,180,255,0.4);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,180,255,0.5);
+      white-space: nowrap;
     }
 
     .game-status-item {
@@ -184,19 +185,31 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      flex-shrink: 0;
-      min-width: 0;
+      height: 100%;
+    }
+    
+    .game-status-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
     }
 
     .game-status-label {
       color: var(--col-white);
-      font-size: 18px;
-      margin-bottom: 6px;
-      text-shadow: 0 0 5px var(--col-xrp-accent);
-      font-weight: 700;
-      opacity: 0.9;
+      font-size: 14px;
+      text-shadow: 0 0 4px var(--col-xrp-accent);
+      font-weight: 600;
+      opacity: 0.8;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+    }
+    
+    .game-status-value {
+      color: var(--col-white);
+      font-size: 20px;
+      font-weight: 800;
+      text-shadow: 0 0 5px var(--col-xrp-accent);
     }
 
     #game-highscore-value {
@@ -345,15 +358,15 @@
     }
 
     #game-next-fruit {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       filter: drop-shadow(0 0 5px var(--col-xrp-accent)) drop-shadow(0 0 10px rgba(0,180,255,0.3));
       animation: float 2s infinite ease-in-out, glow 3s infinite ease-in-out;
       border: 2px solid rgba(0,180,255,0.3);
       background: radial-gradient(circle at center, rgba(0,180,255,0.1) 0%, transparent 70%);
       transition: all 0.3s ease;
-      margin-top: 5px;
+      margin-top: 4px;
     }
 
     #progress-text {
@@ -589,30 +602,39 @@
       display: none;
     }
 
-    /* Inline Progress Bar in Status Bar */
+    /* Progress Bar Container */
     #progress-container-inline {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-right: 8px;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      height: 100%;
+      padding: 10px 0;
     }
 
     #progress-label-inline {
       color: var(--col-white);
-      font-size: 16px;
-      font-weight: 700;
-      opacity: 0.9;
-      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.8;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    
+    #progress-bar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     #progress-bar-inline {
-      width: 180px;
-      height: 26px;
+      flex: 1;
+      height: 24px;
       background: rgba(0, 0, 0, 0.4);
       border: 2px solid var(--col-xrp-accent);
-      border-radius: 13px;
+      border-radius: 12px;
       overflow: hidden;
       position: relative;
     }
@@ -761,35 +783,33 @@
 
     /* Responsive Design for Mobile and Small Screens */
     @media (max-width: 768px) {
-      #game-score {
-        font-size: 24px;
-        padding: 6px 12px;
-        top: 12px;
-        left: 12px;
-        max-width: 200px;
+      #game-status {
+        height: 100px;
+        grid-template-columns: auto 1fr 1fr 1fr 200px;
+        gap: 15px;
+        padding: 0 10px;
       }
 
-      #game-status {
-        height: 50px;
+      #game-score {
+        font-size: 36px;
+        padding: 6px 12px;
       }
 
       .game-status-label {
-        font-size: 14px;
-        margin-left: 12px;
-        margin-right: 6px;
+        font-size: 12px;
       }
-
-      #game-highscore-value {
-        font-size: 20px;
-      }
-
-      #validator-status {
-        font-size: 16px;
+      
+      .game-status-value {
+        font-size: 18px;
       }
 
       #game-next-fruit {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
+      }
+      
+      #progress-bar-inline {
+        height: 20px;
       }
 
       #progress-container {
@@ -835,35 +855,37 @@
     }
 
     @media (max-width: 480px) {
-      #game-score {
-        font-size: 20px;
-        padding: 4px 8px;
-        top: 8px;
-        left: 8px;
-        max-width: 150px;
+      #game-status {
+        height: 90px;
+        grid-template-columns: auto 1fr 1fr 1fr 150px;
+        gap: 10px;
+        padding: 0 8px;
       }
 
-      .game-status-item {
-        margin-right: 16px;
+      #game-score {
+        font-size: 30px;
+        padding: 4px 10px;
       }
 
       .game-status-label {
-        font-size: 12px;
-        margin-left: 8px;
-        margin-right: 4px;
+        font-size: 10px;
       }
-
-      #game-highscore-value {
-        font-size: 18px;
-      }
-
-      #validator-status {
-        font-size: 14px;
+      
+      .game-status-value {
+        font-size: 16px;
       }
 
       #game-next-fruit {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
+      }
+      
+      #progress-bar-inline {
+        height: 18px;
+      }
+      
+      #progress-text {
+        font-size: 12px;
       }
 
       #progress-container {
@@ -962,29 +984,36 @@
 
 
         <div id="game-status">
+          <!-- XRP Score -->
           <div id="game-score">0</div>
           
-          <div style="display: flex; align-items: center; gap: 30px;">
-            <div class="game-status-item">
-              <div class="game-status-label">High Score</div>
-              <div id="game-highscore-value" style="font-size: 24px; font-weight: 800;">0</div>
-            </div>
-            <div class="game-status-item">
-              <div class="game-status-label">Next Drop</div>
-              <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
-            </div>
-            <div class="game-status-item">
-              <div class="game-status-label">Whale Status</div>
-              <div id="validator-status" style="font-size: 18px;">Pending</div>
-            </div>
+          <!-- High Score -->
+          <div class="game-status-inline">
+            <div class="game-status-label">High Score:</div>
+            <div id="game-highscore-value" class="game-status-value">0</div>
           </div>
           
+          <!-- Next Drop -->
+          <div class="game-status-item">
+            <div class="game-status-label">Next Drop</div>
+            <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
+          </div>
+          
+          <!-- Whale Status -->
+          <div class="game-status-inline">
+            <div class="game-status-label">🐋</div>
+            <div id="validator-status" class="game-status-value">Pending</div>
+          </div>
+          
+          <!-- Progress Bar -->
           <div id="progress-container-inline">
-            <div id="progress-label-inline">Next Code</div>
-            <div id="progress-bar-inline">
-              <div id="progress-fill"></div>
+            <div id="progress-label-inline">Progress to Next Code</div>
+            <div id="progress-bar-wrapper">
+              <div id="progress-bar-inline">
+                <div id="progress-fill"></div>
+              </div>
+              <div id="progress-text">0%</div>
             </div>
-            <div id="progress-text">0%</div>
           </div>
         </div>
 

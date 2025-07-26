@@ -21,7 +21,7 @@ const {
 
 const wallPad = 64;
 const loseHeight = 84;
-const statusBarHeight = 90;
+const statusBarHeight = 120;
 const previewBallHeight = 32;
 const friction = {
 	friction: 0.006,
