@@ -62,7 +62,6 @@ const Game = {
 		progressBar: document.getElementById('progress-bar-inline'),
 		progressFill: document.getElementById('progress-fill'),
 		progressText: document.getElementById('progress-text'),
-		validatorAchievement: document.getElementById('validator-achievement'),
 	},
 	
 	// Crypto meme phrases for various game states
@@ -281,16 +280,8 @@ const Game = {
 	},
 	
 	showValidatorAchievement: function () {
-		// Show the validator achievement display
-		Game.elements.validatorAchievement.style.display = 'block';
-		
-		// Update whale status to show validator
+		// Validator achievement removed - just update whale status
 		Game.updateWhaleStatus();
-		
-		// Hide after 5 seconds but keep validator status
-		setTimeout(() => {
-			Game.elements.validatorAchievement.style.display = 'none';
-		}, 5000);
 	},
 	saveHighscore: function () {
 		Game.calculateScore();
