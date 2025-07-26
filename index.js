@@ -62,6 +62,7 @@ const Game = {
 		progressBar: document.getElementById('progress-bar-inline'),
 		progressFill: document.getElementById('progress-fill'),
 		progressText: document.getElementById('progress-text'),
+		startScreenOverlay: document.getElementById('start-screen-overlay'),
 	},
 	
 	// Crypto meme phrases for various game states
@@ -204,6 +205,7 @@ const Game = {
 	],
 	currentFruitSize: 0,
 	nextFruitSize: 0,
+	state: GameStates.MENU,
 	setNextFruitSize: function () {
 		Game.nextFruitSize = Math.floor(rand() * 5);
 		const nextToken = Game.fruitSizes[Game.nextFruitSize];
@@ -282,6 +284,37 @@ const Game = {
 	showValidatorAchievement: function () {
 		// Validator achievement removed - just update whale status
 		Game.updateWhaleStatus();
+	},
+	
+	startGame: function () {
+		Game.state = GameStates.READY;
+		Game.elements.startScreenOverlay.style.display = 'none';
+		Game.elements.ui.style.display = 'block';
+		
+		// Initialize game
+		Game.score = 0;
+		Game.elements.score.textContent = Game.score;
+		Game.setNextFruitSize();
+		Game.setCurrentFruitSize();
+		Game.elements.end.style.display = 'none';
+		
+		// Switch to game world
+		Composite.clear(engine.world);
+		Composite.add(engine.world, gameStatics);
+		
+		console.log('🎮 Game started!');
+	},
+	
+	showStartScreen: function () {
+		Game.state = GameStates.MENU;
+		Game.elements.startScreenOverlay.style.display = 'flex';
+		Game.elements.ui.style.display = 'none';
+		
+		// Switch to menu world  
+		Composite.clear(engine.world);
+		Composite.add(engine.world, menuStatics);
+		
+		console.log('📱 Showing start screen');
 	},
 	saveHighscore: function () {
 		Game.calculateScore();
@@ -1121,6 +1154,20 @@ const Game = {
 		}, 250);
 
 		Events.on(mouseConstraint, 'mouseup', function (e) {
+			// Handle start button click
+			if (Game.state === GameStates.MENU) {
+				const bodies = Composite.allBodies(engine.world);
+				const startButton = bodies.find(body => body.label === 'btn-start');
+				if (startButton && e.mouse.position.x >= startButton.position.x - 150 && 
+					e.mouse.position.x <= startButton.position.x + 150 &&
+					e.mouse.position.y >= startButton.position.y - 40 && 
+					e.mouse.position.y <= startButton.position.y + 40) {
+					Game.startGame();
+					return;
+				}
+			}
+			
+			// Handle fruit dropping
 			Game.addFruit(e.mouse.position.x);
 		});
 
@@ -1284,39 +1331,58 @@ const render = Render.create({
 });
 
 const menuStatics = [
-	Bodies.rectangle(Game.width / 2, Game.height * 0.4, 512, 512, {
+	// Game Title/Logo Area
+	Bodies.rectangle(Game.width / 2, 120, 400, 80, {
 		isStatic: true,
-		render: { sprite: { texture: './assets/new_generated/optimized_Seamless_cosmic_nebula_texture.jpeg' } },
+		render: { 
+			fillStyle: 'transparent'
+		},
+		label: 'title-area'
 	}),
 
-	// Add each XRP ecosystem token in a circle
-	...Array.apply(null, Array(Game.fruitSizes.length)).map((_, index) => {
-		const x = (Game.width / 2) + 192 * Math.cos((Math.PI * 2 * index)/12);
-		const y = (Game.height * 0.4) + 192 * Math.sin((Math.PI * 2 * index)/12);
-		const r = 64;
-		
-		// Calculate proper scale based on actual image dimensions
-		const size = Game.fruitSizes[index];
-		const targetDiameter = r * 2;
-		const maxImageDimension = Math.max(size.imgWidth, size.imgHeight);
-		const scale = targetDiameter / maxImageDimension;
-
-		return Bodies.circle(x, y, r, {
-			isStatic: true,
-			render: {
-				sprite: {
-					texture: size.img,
-					xScale: scale,
-					yScale: scale,
-				},
+	// Featured Tokens Preview (3 tokens in a row)
+	Bodies.circle(Game.width / 2 - 120, Game.height * 0.4, 48, {
+		isStatic: true,
+		render: {
+			sprite: {
+				texture: Game.fruitSizes[0].img,
+				xScale: 0.24,
+				yScale: 0.24,
 			},
-		});
+		},
+	}),
+	
+	Bodies.circle(Game.width / 2, Game.height * 0.4, 56, {
+		isStatic: true,
+		render: {
+			sprite: {
+				texture: Game.fruitSizes[4].img, // HODL Shield
+				xScale: 0.22,
+				yScale: 0.22,
+			},
+		},
+	}),
+	
+	Bodies.circle(Game.width / 2 + 120, Game.height * 0.4, 48, {
+		isStatic: true,
+		render: {
+			sprite: {
+				texture: Game.fruitSizes[8].img, // Galaxy
+				xScale: 0.24,
+				yScale: 0.24,
+			},
+		},
 	}),
 
-	Bodies.rectangle(Game.width / 2, Game.height * 0.75, 512, 96, {
+	// Start Button
+	Bodies.rectangle(Game.width / 2, Game.height * 0.75, 300, 80, {
 		isStatic: true,
 		label: 'btn-start',
-		render: { sprite: { texture: './assets/new_generated/optimized_start_button.png' } },
+		render: { 
+			fillStyle: '#00B4FF',
+			strokeStyle: '#FFD700',
+			lineWidth: 3
+		},
 	}),
 ];
 
@@ -1385,5 +1451,8 @@ const resizeCanvas = () => {
 	Game.elements.ui.style.transform = `scale(${scaleUI})`;
 };
 
-document.body.onload = resizeCanvas;
+document.body.onload = () => {
+	resizeCanvas();
+	Game.showStartScreen();
+};
 document.body.onresize = resizeCanvas;
