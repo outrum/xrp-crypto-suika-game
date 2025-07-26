@@ -1444,14 +1444,7 @@ const mouseConstraint = MouseConstraint.create(engine, {
 });
 render.mouse = mouse;
 
-Game.initGame().catch(error => {
-	console.error('Failed to initialize game:', error);
-	// Fallback initialization without preloading
-	Game.loadHighscore();
-	Game.elements.ui.style.display = 'none';
-	Game.fruitsMerged = Array.apply(null, Array(Game.fruitSizes.length)).map(() => 0);
-	Game.elements.validatorStatus.innerText = 'Ready to HODL';
-});
+// Don't initialize until after document loads
 
 const resizeCanvas = () => {
 	const screenWidth = document.body.clientWidth;
@@ -1481,6 +1474,17 @@ const resizeCanvas = () => {
 
 document.body.onload = () => {
 	resizeCanvas();
-	Game.showStartScreen();
+	// Initialize game first
+	Game.initGame().then(() => {
+		Game.showStartScreen();
+	}).catch(error => {
+		console.error('Failed to initialize game:', error);
+		// Fallback initialization without preloading
+		Game.loadHighscore();
+		Game.elements.ui.style.display = 'none';
+		Game.fruitsMerged = Array.apply(null, Array(Game.fruitSizes.length)).map(() => 0);
+		Game.elements.validatorStatus.innerText = 'Ready to HODL';
+		Game.showStartScreen();
+	});
 };
 document.body.onresize = resizeCanvas;
