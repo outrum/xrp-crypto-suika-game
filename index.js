@@ -21,7 +21,7 @@ const {
 
 const wallPad = 64;
 const loseHeight = 84;
-const statusBarHeight = 48;
+const statusBarHeight = 90;
 const previewBallHeight = 32;
 const friction = {
 	friction: 0.006,
@@ -191,17 +191,17 @@ const Game = {
 
 	// XRP ecosystem token sizes with proper progression from smaller to larger elements
 	fruitSizes: [
-		{ radius: 24,  scoreValue: 1,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
-		{ radius: 32,  scoreValue: 3,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
-		{ radius: 25,  scoreValue: 6,  img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
-		{ radius: 40,  scoreValue: 10, img: './assets/new_generated/game_ready/cropped_optimized_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
-		{ radius: 48,  scoreValue: 15, img: './assets/new_generated/game_ready/cropped_optimized_hold_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
-		{ radius: 45,  scoreValue: 21, img: './assets/new_generated/game_ready/cropped_optimized_wheal.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
-		{ radius: 35,  scoreValue: 28, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
-		{ radius: 42,  scoreValue: 36, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
-		{ radius: 56,  scoreValue: 45, img: './assets/new_generated/game_ready/cropped_optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
-		{ radius: 40,  scoreValue: 55, img: './assets/new_generated/game_ready/cropped_optimized_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
-		{ radius: 64,  scoreValue: 66, img: './assets/new_generated/game_ready/cropped_optimized_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
+		{ radius: 40,  scoreValue: 1,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
+		{ radius: 48,  scoreValue: 3,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
+		{ radius: 42,  scoreValue: 6,  img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
+		{ radius: 56,  scoreValue: 10, img: './assets/new_generated/game_ready/cropped_optimized_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
+		{ radius: 64,  scoreValue: 15, img: './assets/new_generated/game_ready/cropped_optimized_hold_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
+		{ radius: 60,  scoreValue: 21, img: './assets/new_generated/game_ready/cropped_optimized_wheal.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
+		{ radius: 52,  scoreValue: 28, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
+		{ radius: 58,  scoreValue: 36, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
+		{ radius: 72,  scoreValue: 45, img: './assets/new_generated/game_ready/cropped_optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
+		{ radius: 56,  scoreValue: 55, img: './assets/new_generated/game_ready/cropped_optimized_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
+		{ radius: 80,  scoreValue: 66, img: './assets/new_generated/game_ready/cropped_optimized_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
 	],
 	currentFruitSize: 0,
 	nextFruitSize: 0,
