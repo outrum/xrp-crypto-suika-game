@@ -1465,33 +1465,37 @@ const resizeCanvas = () => {
 	}
 };
 
+// Simple start game function available globally
+function startGame() {
+	console.log('🎮 Starting game...');
+	const startScreen = document.getElementById('start-screen');
+	if (startScreen) {
+		startScreen.classList.add('hidden');
+	}
+	
+	// Initialize elements if not done already
+	if (!Game.elements.canvas) {
+		Game.initializeElements();
+	}
+	
+	// Start the actual game
+	Game.startGame();
+}
+
 document.body.onload = () => {
 	resizeCanvas();
 	
-	// Initialize elements first
+	// Initialize elements
 	Game.initializeElements();
 	
-	// Show start screen immediately 
-	console.log('🔧 Showing start screen immediately');
-	if (Game.elements.startScreenOverlay) {
-		Game.elements.startScreenOverlay.style.display = 'flex';
-		Game.elements.ui.style.display = 'none';
-		Game.state = GameStates.MENU;
-		console.log('✅ Start screen should now be visible');
-	} else {
-		console.error('❌ Start screen overlay element not found!');
-	}
+	// Start screen is visible by default in CSS
+	console.log('✅ Start screen visible, ready to play');
 	
 	// Initialize game in background
 	Game.initGame().then(() => {
-		console.log('✅ Game initialized - start screen should be visible');
+		console.log('✅ Game initialized');
 	}).catch(error => {
 		console.error('Failed to initialize game:', error);
-		// Fallback initialization without preloading
-		Game.loadHighscore();
-		Game.elements.ui.style.display = 'none';
-		Game.fruitsMerged = Array.apply(null, Array(Game.fruitSizes.length)).map(() => 0);
-		Game.elements.validatorStatus.innerText = 'Ready to HODL';
 	});
 };
 document.body.onresize = resizeCanvas;

@@ -249,83 +249,45 @@
       }
     }
 
-    /* Start Screen Overlay Styles */
-    #start-screen-overlay {
-      position: absolute;
+    /* Simple Start Screen */
+    #start-screen {
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1000;
+      background: #0C152E;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      background: rgba(12, 21, 46, 0.95);
+      z-index: 2000;
     }
-
-    #game-title {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    #main-title {
+    
+    #start-screen h1 {
+      color: white;
       font-size: 48px;
-      font-weight: 900;
-      color: var(--col-white);
-      text-shadow: 
-        3px 3px 0 var(--col-primary),
-        0 0 20px var(--col-xrp-accent),
-        0 0 40px rgba(0, 180, 255, 0.5);
-      margin: 0;
-      letter-spacing: 2px;
-      background: linear-gradient(45deg, #FFD700, #00B4FF, #FFD700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: titleGlow 3s infinite ease-in-out;
-    }
-
-    #sub-title {
-      font-size: 20px;
-      color: var(--col-xrp-light);
-      margin: 10px 0 0 0;
-      text-shadow: 0 0 10px rgba(0, 180, 255, 0.6);
-      font-weight: 600;
-    }
-
-
-    #start-button-text {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--col-white);
-      text-shadow: 2px 2px 0 var(--col-primary);
-      cursor: pointer;
-      animation: buttonPulse 2s infinite ease-in-out;
-      padding: 15px 30px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 2px solid var(--col-xrp-accent);
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,180,255,0.5);
       margin-bottom: 40px;
-    }
-
-    #start-button-text:hover {
-      background: rgba(0, 180, 255, 0.2);
-      box-shadow: 0 0 25px rgba(0,180,255,0.8);
-    }
-
-    #game-instructions {
       text-align: center;
     }
-
-    #game-instructions p {
-      font-size: 16px;
-      color: var(--col-xrp-light);
-      margin: 5px 0;
-      text-shadow: 0 0 8px rgba(0, 180, 255, 0.4);
-      font-weight: 500;
+    
+    #start-screen button {
+      background: rgba(0, 180, 255, 0.8);
+      border: 2px solid #00B4FF;
+      color: white;
+      font-size: 24px;
+      padding: 15px 30px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    #start-screen button:hover {
+      background: rgba(0, 180, 255, 1);
+    }
+    
+    #start-screen.hidden {
+      display: none;
     }
 
     @keyframes titleGlow {
@@ -962,26 +924,15 @@
   </style>
 </head>
 <body>
+  <!-- Simple Start Screen -->
+  <div id="start-screen">
+    <h1>XRP CRYPTO SUIKA</h1>
+    <button onclick="startGame()">🎮 START GAME 🎮</button>
+  </div>
+
   <div class="container">
     <div id="game-canvas">
       <div id="game-ui">
-        <!-- Start Screen Overlay -->
-        <div id="start-screen-overlay">
-          <div id="game-title">
-            <h1 id="main-title">XRP CRYPTO SUIKA</h1>
-            <p id="sub-title">🚀 Stack • Merge • Moon! 🌙</p>
-          </div>
-          
-          
-          <div id="start-button-text" onclick="Game.startGame()">
-            <span>🎮 START GAME 🎮</span>
-          </div>
-          
-          <div id="game-instructions">
-            <p>Drop and merge crypto tokens to reach the moon!</p>
-            <p>Unlock secret codes as you score higher! 💎</p>
-          </div>
-        </div>
 
         <div id="game-end-container">
           <div id="game-end">
