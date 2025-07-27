@@ -1453,12 +1453,16 @@ const resizeCanvas = () => {
 		scaleUI = newWidth / Game.width;
 	}
 
-	render.canvas.style.width = `${newWidth}px`;
-	render.canvas.style.height = `${newHeight}px`;
+	if (render && render.canvas) {
+		render.canvas.style.width = `${newWidth}px`;
+		render.canvas.style.height = `${newHeight}px`;
+	}
 
-	Game.elements.ui.style.width = `${Game.width}px`;
-	Game.elements.ui.style.height = `${Game.height}px`;
-	Game.elements.ui.style.transform = `scale(${scaleUI})`;
+	if (Game.elements && Game.elements.ui) {
+		Game.elements.ui.style.width = `${Game.width}px`;
+		Game.elements.ui.style.height = `${Game.height}px`;
+		Game.elements.ui.style.transform = `scale(${scaleUI})`;
+	}
 };
 
 document.body.onload = () => {
