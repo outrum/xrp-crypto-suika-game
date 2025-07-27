@@ -41,28 +41,32 @@ const Game = {
 	width: 640,
 	height: 960,
 	elements: {
-		canvas: document.getElementById('game-canvas'),
-		ui: document.getElementById('game-ui'),
-		score: document.getElementById('game-score'),
-		end: document.getElementById('game-end-container'),
-		endTitle: document.getElementById('game-end-title'),
-		statusValue: document.getElementById('game-highscore-value'),
-		nextFruitImg: document.getElementById('game-next-fruit'),
-		validatorStatus: document.getElementById('validator-status'),
 		previewBall: null,
-		secretCodePopup: document.getElementById('secret-code-popup'),
-		secretCodeMessage: document.getElementById('secret-code-message'),
-		secretCodeValue: document.getElementById('secret-code-value'),
-		copyCodeBtn: document.getElementById('copy-code-btn'),
-		shareTwitterBtn: document.getElementById('share-twitter-btn'),
-		shareGenericBtn: document.getElementById('share-generic-btn'),
-		closePopupBtn: document.getElementById('close-popup-btn'),
-		progressContainer: document.getElementById('progress-container-inline'),
-		progressLabel: document.getElementById('progress-label-inline'),
-		progressBar: document.getElementById('progress-bar-inline'),
-		progressFill: document.getElementById('progress-fill'),
-		progressText: document.getElementById('progress-text'),
-		startScreenOverlay: document.getElementById('start-screen-overlay'),
+	},
+
+	initializeElements: function() {
+		Game.elements.canvas = document.getElementById('game-canvas');
+		Game.elements.ui = document.getElementById('game-ui');
+		Game.elements.score = document.getElementById('game-score');
+		Game.elements.end = document.getElementById('game-end-container');
+		Game.elements.endTitle = document.getElementById('game-end-title');
+		Game.elements.statusValue = document.getElementById('game-highscore-value');
+		Game.elements.nextFruitImg = document.getElementById('game-next-fruit');
+		Game.elements.validatorStatus = document.getElementById('validator-status');
+		Game.elements.secretCodePopup = document.getElementById('secret-code-popup');
+		Game.elements.secretCodeMessage = document.getElementById('secret-code-message');
+		Game.elements.secretCodeValue = document.getElementById('secret-code-value');
+		Game.elements.copyCodeBtn = document.getElementById('copy-code-btn');
+		Game.elements.shareTwitterBtn = document.getElementById('share-twitter-btn');
+		Game.elements.shareGenericBtn = document.getElementById('share-generic-btn');
+		Game.elements.closePopupBtn = document.getElementById('close-popup-btn');
+		Game.elements.progressContainer = document.getElementById('progress-container-inline');
+		Game.elements.progressLabel = document.getElementById('progress-label-inline');
+		Game.elements.progressBar = document.getElementById('progress-bar-inline');
+		Game.elements.progressFill = document.getElementById('progress-fill');
+		Game.elements.progressText = document.getElementById('progress-text');
+		Game.elements.startScreenOverlay = document.getElementById('start-screen-overlay');
+		console.log('🔧 Elements initialized. Start screen overlay:', Game.elements.startScreenOverlay);
 	},
 	
 	// Crypto meme phrases for various game states
@@ -1460,11 +1464,19 @@ const resizeCanvas = () => {
 document.body.onload = () => {
 	resizeCanvas();
 	
+	// Initialize elements first
+	Game.initializeElements();
+	
 	// Show start screen immediately 
 	console.log('🔧 Showing start screen immediately');
-	Game.elements.startScreenOverlay.style.display = 'flex';
-	Game.elements.ui.style.display = 'none';
-	Game.state = GameStates.MENU;
+	if (Game.elements.startScreenOverlay) {
+		Game.elements.startScreenOverlay.style.display = 'flex';
+		Game.elements.ui.style.display = 'none';
+		Game.state = GameStates.MENU;
+		console.log('✅ Start screen should now be visible');
+	} else {
+		console.error('❌ Start screen overlay element not found!');
+	}
 	
 	// Initialize game in background
 	Game.initGame().then(() => {
