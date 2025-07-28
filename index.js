@@ -1136,41 +1136,50 @@ window.Game = {
 	},
 
 	startGame: function () {
-		Game.sounds.click.play();
+		console.log('🎮 Game.startGame() called');
 		
 		// Start the physics engine now
 		if (!gameStarted) {
 			Runner.run(runner, engine);
 			gameStarted = true;
+			console.log('🚀 Physics engine started');
 		}
 
-		// Clear any existing world bodies
+		// Clear world and add game boundaries
+		Composite.clear(engine.world);
 		Composite.add(engine.world, gameStatics);
+		Composite.add(engine.world, mouseConstraint);
+		console.log('🏗️ Game world initialized');
 
+		// Show game UI
+		if (Game.elements.ui) {
+			Game.elements.ui.style.display = 'block';
+			console.log('👁️ Game UI shown');
+		}
+		
+		// Hide end screen
+		if (Game.elements.end) {
+			Game.elements.end.style.display = 'none';
+		}
+
+		// Initialize game state
+		Game.score = 0;
+		Game.state = GameStates.READY;
 		Game.calculateScore();
-		Game.elements.endTitle.innerText = 'Ledger Closed!';
-		Game.elements.ui.style.display = 'block';
-		Game.elements.end.style.display = 'none';
 		Game.updateWhaleStatus();
 		Game.updateProgressBar();
 		
-		// Check if all codes are already unlocked and show validator achievement
-		const allCodesUnlocked = Game.secretCodes.every(code => code.revealed);
-		if (allCodesUnlocked) {
-			setTimeout(() => {
-				Game.showValidatorAchievement();
-			}, 1000);
-		}
-		
 		// Initialize current token size and preview
-		Game.currentFruitSize = Game.nextFruitSize;
+		Game.currentFruitSize = Game.nextFruitSize || 0;
 		Game.setNextFruitSize();
 		
+		const previewBallHeight = 150;
 		Game.elements.previewBall = Game.generateFruitBody(Game.width / 2, previewBallHeight, Game.currentFruitSize, { isStatic: true });
 		Composite.add(engine.world, Game.elements.previewBall);
 
 		setTimeout(() => {
-			Game.stateIndex = GameStates.READY;
+			Game.state = GameStates.READY;
+			console.log('✅ Game ready to play!');
 		}, 250);
 
 		Events.on(mouseConstraint, 'mouseup', function (e) {
