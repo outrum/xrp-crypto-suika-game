@@ -1466,7 +1466,7 @@ const resizeCanvas = () => {
 };
 
 // Simple start game function available globally
-function startGame() {
+window.startGame = function() {
 	console.log('🎮 Starting game...');
 	const startScreen = document.getElementById('start-screen');
 	if (startScreen) {
