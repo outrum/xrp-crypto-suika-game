@@ -70,6 +70,8 @@ window.Game = {
 		
 		// Create render after canvas element is available
 		if (Game.elements.canvas && !render) {
+			console.log('🔧 Creating render with canvas element:', Game.elements.canvas);
+			
 			render = Render.create({
 				element: Game.elements.canvas,
 				engine,
@@ -81,20 +83,29 @@ window.Game = {
 				}
 			});
 			
-			// Create mouse control after render is ready
-			mouse = Mouse.create(render.canvas);
-			mouseConstraint = MouseConstraint.create(engine, {
-				mouse: mouse,
-				constraint: {
-					stiffness: 0.2,
-					render: {
-						visible: false,
-					},
-				},
-			});
-			render.mouse = mouse;
+			console.log('🎨 Render created:', render);
+			console.log('🎨 Render canvas after creation:', render.canvas);
+			console.log('🎨 Canvas width/height:', render.canvas?.width, render.canvas?.height);
 			
-			console.log('🎨 Render and mouse controls created');
+			// Create mouse control after render is ready
+			if (render.canvas) {
+				mouse = Mouse.create(render.canvas);
+				mouseConstraint = MouseConstraint.create(engine, {
+					mouse: mouse,
+					constraint: {
+						stiffness: 0.2,
+						render: {
+							visible: false,
+						},
+					},
+				});
+				render.mouse = mouse;
+				console.log('🖱️ Mouse controls created');
+			} else {
+				console.error('❌ Render canvas is null - cannot create mouse controls');
+			}
+			
+			console.log('🎨 Render initialization complete');
 		}
 		
 		console.log('🔧 Elements initialized. Canvas:', Game.elements.canvas);
