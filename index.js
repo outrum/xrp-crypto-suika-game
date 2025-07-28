@@ -66,8 +66,38 @@ window.Game = {
 		Game.elements.progressBar = document.getElementById('progress-bar-inline');
 		Game.elements.progressFill = document.getElementById('progress-fill');
 		Game.elements.progressText = document.getElementById('progress-text');
-		Game.elements.startScreenOverlay = document.getElementById('start-screen-overlay');
-		console.log('🔧 Elements initialized. Start screen overlay:', Game.elements.startScreenOverlay);
+		Game.elements.startScreen = document.getElementById('start-screen');
+		
+		// Create render after canvas element is available
+		if (Game.elements.canvas && !render) {
+			render = Render.create({
+				element: Game.elements.canvas,
+				engine,
+				options: {
+					width: Game.width,
+					height: Game.height,
+					wireframes: false,
+					background: '#0C152E'
+				}
+			});
+			
+			// Create mouse control after render is ready
+			mouse = Mouse.create(render.canvas);
+			mouseConstraint = MouseConstraint.create(engine, {
+				mouse: mouse,
+				constraint: {
+					stiffness: 0.2,
+					render: {
+						visible: false,
+					},
+				},
+			});
+			render.mouse = mouse;
+			
+			console.log('🎨 Render and mouse controls created');
+		}
+		
+		console.log('🔧 Elements initialized. Canvas:', Game.elements.canvas);
 	},
 	
 	// Crypto meme phrases for various game states
@@ -1138,8 +1168,12 @@ window.Game = {
 	startGame: function () {
 		console.log('🎮 Game.startGame() called');
 		
-		// Start the physics engine now
+		// Start the physics engine and render now
 		if (!gameStarted) {
+			if (render) {
+				Render.run(render);
+				console.log('🎨 Render started');
+			}
 			Runner.run(runner, engine);
 			gameStarted = true;
 			console.log('🚀 Physics engine started');
@@ -1340,16 +1374,7 @@ window.Game = {
 
 const engine = Engine.create();
 const runner = Runner.create();
-const render = Render.create({
-	element: Game.elements.canvas,
-	engine,
-	options: {
-		width: Game.width,
-		height: Game.height,
-		wireframes: false,
-		background: '#0C152E'
-	}
-});
+let render = null; // Will be created after elements are initialized
 
 // Don't add menu statics or start physics until game actually starts
 let gameStarted = false;
@@ -1430,18 +1455,9 @@ const gameStatics = [
 	Bodies.rectangle(Game.width / 2, Game.height + (wallPad / 2) - statusBarHeight, Game.width, wallPad, wallProps),
 ];
 
-// add mouse control
-const mouse = Mouse.create(render.canvas);
-const mouseConstraint = MouseConstraint.create(engine, {
-	mouse: mouse,
-	constraint: {
-		stiffness: 0.2,
-		render: {
-			visible: false,
-		},
-	},
-});
-render.mouse = mouse;
+// Mouse control will be created after render is available
+let mouse = null;
+let mouseConstraint = null;
 
 // Don't initialize until after document loads
 
