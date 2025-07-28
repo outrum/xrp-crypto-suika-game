@@ -37,7 +37,8 @@ const GameStates = {
 	LOSE: 3,
 };
 
-const Game = {
+// Make Game global so it can be accessed from HTML
+window.Game = {
 	width: 640,
 	height: 960,
 	elements: {
@@ -1465,22 +1466,7 @@ const resizeCanvas = () => {
 	}
 };
 
-// Simple start game function available globally
-window.startGame = function() {
-	console.log('🎮 Starting game...');
-	const startScreen = document.getElementById('start-screen');
-	if (startScreen) {
-		startScreen.classList.add('hidden');
-	}
-	
-	// Initialize elements if not done already
-	if (!Game.elements.canvas) {
-		Game.initializeElements();
-	}
-	
-	// Start the actual game
-	Game.startGame();
-}
+// Remove duplicate - startGame is now in HTML
 
 document.body.onload = () => {
 	resizeCanvas();

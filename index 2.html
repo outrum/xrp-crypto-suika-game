@@ -994,23 +994,6 @@
   </div>
   
   <script type="text/javascript" src="./matter.js"></script>
-  <script type="module" src="./index.js?v=13"></script>
-  <script>
-    // Global startGame function for button onclick
-    window.startGame = function() {
-      console.log('🎮 Button clicked - starting game...');
-      const startScreen = document.getElementById('start-screen');
-      if (startScreen) {
-        startScreen.classList.add('hidden');
-      }
-      
-      // Call the game's start method once it's loaded
-      if (window.Game && window.Game.startGame) {
-        window.Game.startGame();
-      } else {
-        console.error('Game not loaded yet!');
-      }
-    }
-  </script>
+  <script type="module" src="./index.js?v=11"></script>
 </body>
 </html>
