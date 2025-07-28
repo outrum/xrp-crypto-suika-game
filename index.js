@@ -1173,6 +1173,8 @@ window.Game = {
 			if (render) {
 				Render.run(render);
 				console.log('🎨 Render started');
+				console.log('🎨 Render canvas:', render.canvas);
+				console.log('🎨 Canvas parent:', render.canvas.parentElement);
 			}
 			Runner.run(runner, engine);
 			gameStarted = true;
@@ -1189,6 +1191,12 @@ window.Game = {
 		if (Game.elements.ui) {
 			Game.elements.ui.style.display = 'block';
 			console.log('👁️ Game UI shown');
+		}
+		
+		// Show game canvas container
+		if (Game.elements.canvas) {
+			Game.elements.canvas.style.display = 'block';
+			console.log('🖼️ Game canvas shown');
 		}
 		
 		// Hide end screen
