@@ -1006,9 +1006,22 @@
       
       // Call the game's start method once it's loaded
       if (window.Game && window.Game.startGame) {
+        // Initialize elements if needed
+        if (!window.Game.elements.canvas) {
+          window.Game.initializeElements();
+        }
         window.Game.startGame();
       } else {
-        console.error('Game not loaded yet!');
+        console.error('Game not loaded yet! Trying again in 1 second...');
+        // Try again in 1 second
+        setTimeout(function() {
+          if (window.Game && window.Game.startGame) {
+            if (!window.Game.elements.canvas) {
+              window.Game.initializeElements();
+            }
+            window.Game.startGame();
+          }
+        }, 1000);
       }
     }
   </script>
