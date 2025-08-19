@@ -147,111 +147,39 @@
 
     #game-status {
       position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 640px;
-      height: 70px;
-      background: 
-        linear-gradient(135deg, rgba(12, 21, 46, 0.15), rgba(26, 42, 74, 0.25)),
-        linear-gradient(45deg, 
-          transparent 0%,
-          rgba(0, 180, 255, 0.05) 25%,
-          rgba(247, 147, 26, 0.05) 50%,
-          rgba(0, 180, 255, 0.05) 75%,
-          transparent 100%
-        );
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 2px solid rgba(0, 180, 255, 0.6);
-      border-top: 3px solid rgba(0, 180, 255, 0.8);
-      border-bottom: none;
-      box-shadow: 
-        0 -5px 25px rgba(0, 180, 255, 0.4),
-        0 -2px 15px rgba(247, 147, 26, 0.3),
-        inset 0 2px 15px rgba(255, 255, 255, 0.15),
-        inset 0 -2px 15px rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(25px);
-      z-index: 200;
-      padding: 0 20px;
-      border-radius: 20px 20px 0 0;
-      margin: 0 10px;
-      position: relative;
-      overflow: hidden;
-      animation: holographicPulse 4s infinite ease-in-out;
-    }
-    
-    #game-status::before {
-      content: '';
-      position: absolute;
-      top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: 
-        radial-gradient(circle at 20% 50%, rgba(0, 180, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, rgba(247, 147, 26, 0.1) 0%, transparent 50%),
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 3px,
-          rgba(0, 180, 255, 0.05) 3px,
-          rgba(0, 180, 255, 0.05) 6px
-        );
-      pointer-events: none;
-      animation: dataStream 6s linear infinite;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(135deg, rgba(26, 42, 74, 0.95) 0%, rgba(12, 21, 46, 0.95) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 3px solid var(--col-xrp-accent);
+      box-shadow: 
+        0 -4px 20px rgba(0,180,255,0.4),
+        inset 0 2px 10px rgba(0,180,255,0.2);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      padding: 0 20px;
+      gap: 20px;
     }
     
-    #game-status::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, 
-        rgba(0, 180, 255, 0.4),
-        rgba(247, 147, 26, 0.4),
-        rgba(0, 180, 255, 0.4)
-      );
-      border-radius: 22px 22px 0 0;
-      z-index: -1;
-      opacity: 0;
-      animation: holographicEdgeGlow 2s infinite ease-in-out;
-    }
     
     #game-score {
-      font-size: 36px;
+      font-size: 48px;
       font-weight: 900;
-      color: rgba(255, 255, 255, 0.95);
-      text-shadow: 
-        0 0 15px rgba(255, 255, 255, 0.8),
-        0 0 30px rgba(0, 180, 255, 0.6),
-        0 0 45px rgba(0, 180, 255, 0.4),
-        2px 2px 0 rgba(0, 0, 0, 0.8);
+      color: var(--col-white);
+      text-shadow: 2px 2px 0 var(--col-primary);
       text-align: center;
       padding: 8px 16px;
-      background: 
-        linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(12, 21, 46, 0.4)),
-        repeating-linear-gradient(
-          45deg,
-          transparent 0%,
-          transparent 2px,
-          rgba(0, 180, 255, 0.1) 2px,
-          rgba(0, 180, 255, 0.1) 4px
-        );
-      border: 2px solid rgba(0, 180, 255, 0.8);
-      border-radius: 8px;
-      box-shadow: 
-        0 0 20px rgba(0, 180, 255, 0.6),
-        inset 0 0 15px rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,180,255,0.5);
       white-space: nowrap;
       margin-bottom: 5px;
-      font-family: 'Space Grotesk', 'Roboto Mono', monospace;
-      animation: holographicDataGlow 2.5s infinite ease-in-out;
-      position: relative;
     }
 
     .score-section {
@@ -268,6 +196,7 @@
       justify-content: center;
       text-align: center;
       height: 100%;
+      min-width: 120px;
     }
     
     .game-status-inline {
@@ -278,43 +207,21 @@
     }
 
     .game-status-label {
-      color: rgba(0, 180, 255, 0.9);
-      font-size: 11px;
-      text-shadow: 
-        0 0 8px rgba(0, 180, 255, 0.8),
-        0 0 15px rgba(0, 180, 255, 0.6),
-        0 1px 0 rgba(0, 0, 0, 0.8);
-      font-weight: 700;
-      opacity: 0.95;
+      color: var(--col-white);
+      font-size: 14px;
+      text-shadow: 0 0 4px var(--col-xrp-accent);
+      font-weight: 600;
+      opacity: 0.9;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 2px;
-      font-family: 'Space Grotesk', 'Roboto Mono', monospace;
-      animation: holographicTextPulse 2s infinite ease-in-out;
-      position: relative;
-    }
-    
-    .game-status-label::before {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-      color: rgba(247, 147, 26, 0.3);
-      text-shadow: 0 0 5px rgba(247, 147, 26, 0.5);
-      z-index: -1;
-      animation: holographicGhost 3s infinite ease-in-out;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
     
     .game-status-value {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 16px;
-      font-weight: 700;
-      text-shadow: 
-        0 0 10px rgba(255, 255, 255, 0.8),
-        0 0 20px rgba(0, 180, 255, 0.6),
-        0 0 30px rgba(0, 180, 255, 0.4);
-      font-family: 'Space Grotesk', 'Roboto Mono', monospace;
-      animation: holographicDataGlow 2.5s infinite ease-in-out;
+      color: var(--col-white);
+      font-size: 18px;
+      font-weight: 800;
+      text-shadow: 0 0 5px var(--col-xrp-accent);
     }
 
     #game-highscore-value {
@@ -413,15 +320,12 @@
     }
 
     #game-next-fruit {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      filter: drop-shadow(0 0 5px var(--col-xrp-accent)) drop-shadow(0 0 10px rgba(0,180,255,0.3));
-      animation: float 2s infinite ease-in-out, glow 3s infinite ease-in-out;
-      border: 2px solid rgba(0,180,255,0.3);
-      background: radial-gradient(circle at center, rgba(0,180,255,0.1) 0%, transparent 70%);
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px var(--col-xrp-accent));
+      animation: float 2s infinite ease-in-out;
       transition: all 0.3s ease;
-      margin-top: 4px;
     }
 
     #progress-text {
