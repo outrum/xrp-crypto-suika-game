@@ -146,23 +146,80 @@
     }
 
     #game-status {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 640px;
+      height: 70px;
+      background: 
+        linear-gradient(135deg, rgba(12, 21, 46, 0.15), rgba(26, 42, 74, 0.25)),
+        linear-gradient(45deg, 
+          transparent 0%,
+          rgba(0, 180, 255, 0.05) 25%,
+          rgba(247, 147, 26, 0.05) 50%,
+          rgba(0, 180, 255, 0.05) 75%,
+          transparent 100%
+        );
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 2px solid rgba(0, 180, 255, 0.6);
+      border-top: 3px solid rgba(0, 180, 255, 0.8);
+      border-bottom: none;
+      box-shadow: 
+        0 -5px 25px rgba(0, 180, 255, 0.4),
+        0 -2px 15px rgba(247, 147, 26, 0.3),
+        inset 0 2px 15px rgba(255, 255, 255, 0.15),
+        inset 0 -2px 15px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(25px);
+      z-index: 200;
+      padding: 0 20px;
+      border-radius: 20px 20px 0 0;
+      margin: 0 10px;
+      position: relative;
+      overflow: hidden;
+      animation: holographicPulse 4s infinite ease-in-out;
+    }
+    
+    #game-status::before {
+      content: '';
       position: absolute;
+      top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      height: 100px;
-      background-color: var(--col-bg-lighter);
-      display: grid;
-      grid-template-columns: 200px 1fr 200px;
-      gap: 20px;
-      align-items: center;
-      border-top: 3px solid var(--col-xrp-accent);
-      box-shadow: 0 -4px 20px rgba(0,180,255,0.3);
-      background-image: linear-gradient(90deg, rgba(0,118,192,0.3) 0%, rgba(0,180,255,0.2) 100%);
-      backdrop-filter: blur(15px);
-      z-index: 200;
-      overflow: hidden;
-      padding: 0 20px;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(0, 180, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(247, 147, 26, 0.1) 0%, transparent 50%),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(0, 180, 255, 0.05) 3px,
+          rgba(0, 180, 255, 0.05) 6px
+        );
+      pointer-events: none;
+      animation: dataStream 6s linear infinite;
+    }
+    
+    #game-status::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        rgba(0, 180, 255, 0.4),
+        rgba(247, 147, 26, 0.4),
+        rgba(0, 180, 255, 0.4)
+      );
+      border-radius: 22px 22px 0 0;
+      z-index: -1;
+      opacity: 0;
+      animation: holographicEdgeGlow 2s infinite ease-in-out;
     }
     
     #game-score {
@@ -947,6 +1004,52 @@
     .game-status-value {
       will-change: transform, opacity;
     }
+    
+    /* Missing Holographic HUD Keyframes */
+    @keyframes holographicPulse {
+      0%, 100% {
+        box-shadow: 
+          0 -5px 25px rgba(0, 180, 255, 0.4),
+          0 -2px 15px rgba(247, 147, 26, 0.3),
+          inset 0 2px 15px rgba(255, 255, 255, 0.15),
+          inset 0 -2px 15px rgba(0, 0, 0, 0.2);
+        border-color: rgba(0, 180, 255, 0.6);
+        border-top-color: rgba(0, 180, 255, 0.8);
+      }
+      50% {
+        box-shadow: 
+          0 -8px 35px rgba(0, 180, 255, 0.6),
+          0 -4px 25px rgba(247, 147, 26, 0.5),
+          inset 0 2px 20px rgba(255, 255, 255, 0.2),
+          inset 0 -2px 20px rgba(0, 0, 0, 0.3);
+        border-color: rgba(0, 180, 255, 0.8);
+        border-top-color: rgba(247, 147, 26, 0.9);
+      }
+    }
+    
+    @keyframes dataStream {
+      0% {
+        background-position: 0% 0%, 0% 0%, 0% 0%;
+        opacity: 0.6;
+      }
+      50% {
+        background-position: 100% 0%, -100% 0%, 0% 100%;
+        opacity: 0.8;
+      }
+      100% {
+        background-position: 200% 0%, -200% 0%, 0% 200%;
+        opacity: 0.6;
+      }
+    }
+    
+    @keyframes holographicEdgeGlow {
+      0%, 100% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.6;
+      }
+    }
   </style>
 </head>
 <body>
@@ -969,36 +1072,38 @@
         </div>
 
 
-        <div id="game-status">
-          <!-- Next Drop -->
-          <div class="game-status-item">
-            <div class="game-status-label">Next Drop</div>
-            <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
-          </div>
-          
-          <!-- Center Area (empty for visual balance) -->
-          <div></div>
-          
-          <!-- Score Section -->
-          <div class="score-section">
-            <div id="game-score">0</div>
-            <div class="game-status-inline">
-              <div class="game-status-label">High Score:</div>
-              <div id="game-highscore-value" class="game-status-value">0</div>
-            </div>
-            <div id="validator-status" style="display: none;">Ready to HODL</div>
-            <!-- Hidden progress elements to prevent JS errors -->
-            <div id="progress-container-inline" style="display: none;">
-              <div id="progress-label-inline"></div>
-              <div id="progress-bar-inline">
-                <div id="progress-fill"></div>
-              </div>
-              <div id="progress-text">0%</div>
-            </div>
-          </div>
-        </div>
 
       </div>
+    </div>
+  </div>
+  
+  <!-- Footer Status Bar - Outside of scaled UI container -->
+  <div id="game-status">
+    <!-- Next Drop -->
+    <div class="game-status-item">
+      <span class="game-status-label" data-text="Next Drop">Next Drop</span>
+      <img id="game-next-fruit" src="./assets/tokens/token_01_xrp.png" alt="Next token to drop" />
+    </div>
+    
+    <!-- Score Section -->
+    <div class="score-section">
+      <div>
+        <div id="game-score">0</div>
+        <div class="game-status-inline">
+          <span>High Score:</span>
+          <span id="game-highscore-value" class="game-status-value">0</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Hidden elements to prevent JS errors -->
+    <div id="validator-status" style="display: none;">Ready to HODL</div>
+    <div id="progress-container-inline" style="display: none;">
+      <div id="progress-label-inline"></div>
+      <div id="progress-bar-inline">
+        <div id="progress-fill"></div>
+      </div>
+      <div id="progress-text">0%</div>
     </div>
   </div>
   
