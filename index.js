@@ -184,9 +184,22 @@ window.Game = {
 	offlineModeLogged: false,
 	
 	sounds: null,
+	audioContext: null,
+	reverbNode: null,
+	distortionNode: null,
+	alienModulatorLFO: null,
 	
 	initSounds: function() {
 		if (Game.sounds) return;
+		
+		// Initialize Web Audio Context for alien effects
+		try {
+			Game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+			Game.createAlienAudioNodes();
+		} catch (e) {
+			console.warn('Web Audio API not supported, falling back to basic audio');
+		}
+		
 		Game.sounds = {
 			click: new Audio('./assets/click.mp3'),
 			pop0: new Audio('./assets/pop0.mp3'),
@@ -201,21 +214,249 @@ window.Game = {
 			pop9: new Audio('./assets/pop9.mp3'),
 			pop10: new Audio('./assets/pop10.mp3'),
 		};
-		// Preload sounds to avoid delays
-		Object.values(Game.sounds).forEach(audio => {
-			audio.volume = 0.5;
+		
+		// Preload sounds with alien processing
+		Object.entries(Game.sounds).forEach(([name, audio]) => {
+			audio.volume = 0.6;
 			audio.preload = 'auto';
+			// Add alien characteristics to different sound types
+			if (name.startsWith('pop')) {
+				audio.alienType = 'organic';
+			} else if (name === 'click') {
+				audio.alienType = 'mechanical';
+			}
 		});
 	},
 	
-	playSound: function(soundName) {
+	createAlienAudioNodes: function() {
+		if (!Game.audioContext) return;
+		
+		try {
+			// Create reverb for spacious alien atmosphere
+			Game.reverbNode = Game.audioContext.createConvolver();
+			const reverbBuffer = Game.createReverbImpulse(2.5, 0.8, false);
+			Game.reverbNode.buffer = reverbBuffer;
+			
+			// Create distortion for alien artifacts
+			Game.distortionNode = Game.audioContext.createWaveShaper();
+			Game.distortionNode.curve = Game.createDistortionCurve(15);
+			Game.distortionNode.oversample = '2x';
+			
+			// Create LFO for alien modulation
+			Game.alienModulatorLFO = Game.audioContext.createOscillator();
+			Game.alienModulatorLFO.type = 'sine';
+			Game.alienModulatorLFO.frequency.value = 0.3;
+			
+			// Create gain node for LFO modulation
+			const lfoGain = Game.audioContext.createGain();
+			lfoGain.gain.value = 0.15;
+			
+			// Connect alien audio chain
+			Game.alienModulatorLFO.connect(lfoGain);
+			Game.reverbNode.connect(Game.audioContext.destination);
+			Game.distortionNode.connect(Game.reverbNode);
+			
+			// Start LFO
+			Game.alienModulatorLFO.start();
+		} catch (e) {
+			console.warn('Alien audio processing setup failed:', e);
+		}
+	},
+	
+	createReverbImpulse: function(duration, decay, reverse) {
+		const sampleRate = Game.audioContext.sampleRate;
+		const length = sampleRate * duration;
+		const impulse = Game.audioContext.createBuffer(2, length, sampleRate);
+		
+		for (let channel = 0; channel < 2; channel++) {
+			const channelData = impulse.getChannelData(channel);
+			for (let i = 0; i < length; i++) {
+				const n = reverse ? length - i : i;
+				channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+			}
+		}
+		return impulse;
+	},
+	
+	createDistortionCurve: function(amount) {
+		const samples = 44100;
+		const curve = new Float32Array(samples);
+		const deg = Math.PI / 180;
+		
+		for (let i = 0; i < samples; i++) {
+			const x = (i * 2) / samples - 1;
+			curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+		}
+		return curve;
+	},
+	
+	playSound: function(soundName, options = {}) {
 		try {
 			if (Game.sounds && Game.sounds[soundName]) {
 				const sound = Game.sounds[soundName].cloneNode();
-				sound.volume = 0.5;
-				sound.play().catch(() => {});
+				
+				// Apply alien audio processing if Web Audio is available
+				if (Game.audioContext && Game.audioContext.state === 'running') {
+					Game.playAlienSound(sound, soundName, options);
+				} else {
+					// Fallback to basic audio with some alien characteristics
+					const baseVolume = 0.5;
+					const alienVolume = Game.calculateAlienVolume(soundName, options);
+					sound.volume = Math.min(1, baseVolume * alienVolume);
+					
+					// Add slight pitch variation for alien effect
+					if (sound.playbackRate !== undefined) {
+						sound.playbackRate = 1 + (Math.random() - 0.5) * 0.1;
+					}
+					
+					sound.play().catch(() => {});
+				}
 			}
 		} catch (e) {}
+	},
+	
+	playAlienSound: function(audioElement, soundName, options) {
+		try {
+			const source = Game.audioContext.createMediaElementSource(audioElement);
+			const gainNode = Game.audioContext.createGain();
+			const filterNode = Game.audioContext.createBiquadFilter();
+			
+			// Configure alien filter characteristics
+			filterNode.type = Game.sounds[soundName].alienType === 'organic' ? 'lowpass' : 'bandpass';
+			filterNode.frequency.value = 800 + Math.random() * 1200;
+			filterNode.Q.value = 3 + Math.random() * 7;
+			
+			// Calculate spatial positioning and alien modulation
+			const alienIntensity = Game.calculateAlienIntensity(options);
+			gainNode.gain.value = 0.4 * (0.7 + alienIntensity * 0.6);
+			
+			// Create alien modulation effect (simplified to prevent memory leaks)
+			let lfoGain = null;
+			if (Game.alienModulatorLFO && options.position) {
+				lfoGain = Game.audioContext.createGain();
+				lfoGain.gain.value = 0.05 * alienIntensity;
+				Game.alienModulatorLFO.connect(lfoGain);
+				lfoGain.connect(gainNode.gain);
+			}
+			
+			// Connect alien audio processing chain
+			source.connect(filterNode);
+			filterNode.connect(gainNode);
+			
+			if (alienIntensity > 0.6) {
+				gainNode.connect(Game.distortionNode);
+			} else {
+				gainNode.connect(Game.reverbNode);
+			}
+			
+			// Apply alien frequency modulation
+			const now = Game.audioContext.currentTime;
+			filterNode.frequency.setValueAtTime(filterNode.frequency.value, now);
+			filterNode.frequency.exponentialRampToValueAtTime(
+				filterNode.frequency.value * (1.2 + alienIntensity * 0.8), 
+				now + 0.1
+			);
+			filterNode.frequency.exponentialRampToValueAtTime(
+				filterNode.frequency.value * 0.8, 
+				now + 0.3
+			);
+			
+			// Cleanup function to prevent memory leaks
+			const cleanup = () => {
+				try {
+					if (lfoGain) {
+						Game.alienModulatorLFO.disconnect(lfoGain);
+						lfoGain.disconnect();
+					}
+					source.disconnect();
+					filterNode.disconnect();
+					gainNode.disconnect();
+				} catch (e) {
+					// Ignore cleanup errors
+				}
+			};
+			
+			// Auto-cleanup after sound duration (estimated 2 seconds max)
+			setTimeout(cleanup, 2000);
+			
+			audioElement.play().catch(() => {});
+		} catch (e) {
+			console.warn('Alien sound processing failed:', e);
+		}
+	},
+	
+	calculateAlienIntensity: function(options) {
+		let intensity = 0.3; // Base alien intensity
+		
+		// Increase intensity based on score (higher scores = more alien)
+		if (Game.score) {
+			intensity += Math.min(0.4, Game.score / 5000);
+		}
+		
+		// Increase intensity for special events
+		if (options.event === 'merge') {
+			intensity += 0.3;
+		} else if (options.event === 'collision') {
+			intensity += 0.2;
+		} else if (options.event === 'gameOver') {
+			intensity = 1.0; // Maximum alien effect for game over
+		}
+		
+		return Math.min(1, intensity);
+	},
+	
+	calculateAlienVolume: function(soundName, options) {
+		let volumeMultiplier = 1;
+		
+		// Organic sounds (pops) have different volume characteristics
+		if (soundName.startsWith('pop')) {
+			const popLevel = parseInt(soundName.replace('pop', ''));
+			volumeMultiplier = 0.8 + (popLevel * 0.02); // Louder for higher levels
+		}
+		
+		// Apply alien distancing effect
+		if (options.position) {
+			const distance = Math.sqrt(options.position.x * options.position.x + options.position.y * options.position.y);
+			volumeMultiplier *= Math.max(0.3, 1 - distance / 1000);
+		}
+		
+		return volumeMultiplier;
+	},
+	
+	// Alien visual effects system
+	triggerAlienEffect: function(element, effectType) {
+		if (!element) return;
+		
+		// Remove any existing effects
+		element.classList.remove('chromatic-glitch', 'alien-collision', 'score-quantum-flux', 'game-over-glitch');
+		
+		// Add new effect
+		setTimeout(() => {
+			element.classList.add(effectType);
+		}, 10);
+		
+		// Remove effect after animation
+		setTimeout(() => {
+			element.classList.remove(effectType);
+		}, effectType === 'game-over-glitch' ? 2000 : 600);
+	},
+	
+	triggerScoreEffect: function() {
+		if (Game.elements.score) {
+			Game.triggerAlienEffect(Game.elements.score, 'score-quantum-flux');
+		}
+	},
+	
+	triggerCollisionEffect: function() {
+		if (Game.elements.canvas) {
+			Game.triggerAlienEffect(Game.elements.canvas, 'alien-collision');
+		}
+	},
+	
+	triggerGameOverEffect: function() {
+		if (Game.elements.endTitle) {
+			Game.triggerAlienEffect(Game.elements.endTitle, 'game-over-glitch');
+		}
 	},
 
 	stateIndex: GameStates.MENU,
@@ -231,6 +472,8 @@ window.Game = {
 		Game.score = score;
 		if (Game.elements.score) {
 			Game.elements.score.innerText = Game.score;
+			// Trigger alien score effect
+			Game.triggerScoreEffect();
 		} else {
 			console.error('❌ Score element not found!');
 		}
@@ -1289,7 +1532,14 @@ window.Game = {
 				bodyA.popped = true;
 				bodyB.popped = true;
 
-				Game.playSound(`pop${bodyA.sizeIndex}`);
+				Game.playSound(`pop${bodyA.sizeIndex}`, {
+					event: 'merge',
+					position: { x: bodyA.position.x, y: bodyA.position.y },
+					intensity: bodyA.sizeIndex / 10
+				});
+				// Trigger alien collision effect
+				Game.triggerCollisionEffect();
+				
 				Composite.remove(engine.world, [bodyA, bodyB]);
 				Composite.add(engine.world, Game.generateFruitBody(midPosX, midPosY, newSize));
 				Game.addPop(midPosX, midPosY, bodyA.circleRadius);
@@ -1331,6 +1581,16 @@ window.Game = {
 			Game.elements.endTitle.innerText = randomPhrase;
 		}
 		
+		// Trigger alien game over effect
+		Game.triggerGameOverEffect();
+		
+		// Play alien game over sound
+		Game.playSound('pop0', {
+			event: 'gameOver',
+			position: { x: 250, y: 100 },
+			intensity: 1.0
+		});
+		
 		Game.saveHighscore();
 	},
 
@@ -1365,7 +1625,10 @@ window.Game = {
 	addFruit: function (x) {
 		if (Game.stateIndex !== GameStates.READY) return;
 
-		Game.playSound('click');
+		Game.playSound('click', {
+			event: 'interaction',
+			position: { x: Game.mouse?.position?.x || 0, y: Game.mouse?.position?.y || 0 }
+		});
 
 		Game.stateIndex = GameStates.DROP;
 		const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
