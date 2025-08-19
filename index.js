@@ -192,13 +192,8 @@ window.Game = {
 	initSounds: function() {
 		if (Game.sounds) return;
 		
-		// Initialize Web Audio Context for alien effects
-		try {
-			Game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-			Game.createAlienAudioNodes();
-		} catch (e) {
-			console.warn('Web Audio API not supported, falling back to basic audio');
-		}
+		// Don't initialize Web Audio Context until user interaction
+		// This will be handled in enableAudioAfterUserGesture()
 		
 		Game.sounds = {
 			click: new Audio('./assets/click.mp3'),
@@ -226,6 +221,23 @@ window.Game = {
 				audio.alienType = 'mechanical';
 			}
 		});
+	},
+	
+	enableAudioAfterUserGesture: function() {
+		if (Game.audioContext) return; // Already initialized
+		
+		try {
+			Game.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+			
+			// Resume audio context if it's suspended
+			if (Game.audioContext.state === 'suspended') {
+				Game.audioContext.resume();
+			}
+			
+			Game.createAlienAudioNodes();
+		} catch (e) {
+			console.warn('Web Audio API not supported, falling back to basic audio');
+		}
 	},
 	
 	createAlienAudioNodes: function() {
@@ -1419,6 +1431,9 @@ window.Game = {
 
 	startGame: function () {
 		console.log('🎮 Game.startGame() called');
+		
+		// Enable audio after user gesture (fixes Chrome AudioContext warning)
+		Game.enableAudioAfterUserGesture();
 		
 		// Start the physics engine and render now
 		if (!gameStarted) {
