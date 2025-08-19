@@ -19,16 +19,33 @@ const {
 	Composite, Bodies, Events,
 } = Matter;
 
-const wallPad = 64;
-const loseHeight = 84;
-const statusBarHeight = 185;
-const previewBallHeight = 32;
-const friction = {
-	friction: 0.006,
-	frictionStatic: 0.006,
-	frictionAir: 0,
-	restitution: 0.1
+// Game constants for better maintainability
+const GAME_CONSTANTS = {
+	WALL_PADDING: 64,
+	LOSE_HEIGHT: 84,
+	STATUS_BAR_HEIGHT: 185,
+	PREVIEW_BALL_HEIGHT: 32,
+	PREVIEW_DROP_HEIGHT: 150,
+	FRICTION: {
+		friction: 0.006,
+		frictionStatic: 0.006,
+		frictionAir: 0,
+		restitution: 0.1
+	},
+	IMAGE_LOAD_TIMEOUT: 10000,
+	FEEDBACK_TIMEOUT: 2000,
+	GAME_READY_TIMEOUT: 250,
+	DROP_TIMEOUT: 500,
+	POP_EFFECT_TIMEOUT: 100,
+	THRESHOLD_CELEBRATION_TIMEOUT: 1000
 };
+
+// Keep these for backward compatibility
+const wallPad = GAME_CONSTANTS.WALL_PADDING;
+const loseHeight = GAME_CONSTANTS.LOSE_HEIGHT;
+const statusBarHeight = GAME_CONSTANTS.STATUS_BAR_HEIGHT;
+const previewBallHeight = GAME_CONSTANTS.PREVIEW_BALL_HEIGHT;
+const friction = GAME_CONSTANTS.FRICTION;
 
 const GameStates = {
 	MENU: 0,
@@ -1351,7 +1368,7 @@ window.Game = {
 		Game.playSound('click');
 
 		Game.stateIndex = GameStates.DROP;
-		const latestFruit = Game.generateFruitBody(x, GAME_CONSTANTS.PREVIEW_BALL_HEIGHT, Game.currentFruitSize);
+		const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
 		Composite.add(engine.world, latestFruit);
 
 		Game.currentFruitSize = Game.nextFruitSize;
@@ -1359,23 +1376,27 @@ window.Game = {
 		Game.calculateScore();
 
 		Composite.remove(engine.world, Game.elements.previewBall);
-		Game.elements.previewBall = Game.generateFruitBody(x, GAME_CONSTANTS.PREVIEW_BALL_HEIGHT, Game.currentFruitSize, {
+		Game.elements.previewBall = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize, {
 			isStatic: true,
 			collisionFilter: { mask: 0x0040 }
 		});
 
-		Game.safeTimeout(() => {
+		setTimeout(() => {
 			if (Game.stateIndex === GameStates.DROP) {
 				Composite.add(engine.world, Game.elements.previewBall);
 				Game.stateIndex = GameStates.READY;
 			}
-		}, GAME_CONSTANTS.DROP_TIMEOUT);
+		}, 500);
 	}
 }
 
 const engine = Engine.create();
 const runner = Runner.create();
 let render = null; // Will be created after elements are initialized
+
+// Mouse control variables - need to be declared before use
+let mouse = null;
+let mouseConstraint = null;
 
 // Don't add menu statics or start physics until game actually starts
 let gameStarted = false;
@@ -1461,9 +1482,7 @@ const gameStatics = [
 	Bodies.rectangle(Game.width / 2, Game.height + (GAME_CONSTANTS.WALL_PADDING / 2) - GAME_CONSTANTS.STATUS_BAR_HEIGHT, Game.width, GAME_CONSTANTS.WALL_PADDING, wallProps),
 ];
 
-// Mouse control will be created after render is available
-let mouse = null;
-let mouseConstraint = null;
+// Mouse control variables declared above
 
 // Debounced resize function for better performance
 let resizeTimeout;
