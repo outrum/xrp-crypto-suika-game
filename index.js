@@ -21,7 +21,7 @@ const {
 
 const wallPad = 64;
 const loseHeight = 84;
-const statusBarHeight = 120;
+const statusBarHeight = 185;
 const previewBallHeight = 32;
 const friction = {
 	friction: 0.006,
@@ -70,7 +70,6 @@ window.Game = {
 		
 		// Create render after canvas element is available
 		if (Game.elements.canvas && !render) {
-			console.log('🔧 Creating render with canvas element:', Game.elements.canvas);
 			
 			render = Render.create({
 				element: Game.elements.canvas,
@@ -83,9 +82,15 @@ window.Game = {
 				}
 			});
 			
-			console.log('🎨 Render created:', render);
-			console.log('🎨 Render canvas after creation:', render.canvas);
-			console.log('🎨 Canvas width/height:', render.canvas?.width, render.canvas?.height);
+			
+			// Ensure canvas is visible and properly positioned
+			if (render.canvas) {
+				render.canvas.style.position = 'absolute';
+				render.canvas.style.top = '0';
+				render.canvas.style.left = '0';
+				render.canvas.style.display = 'block';
+				render.canvas.style.zIndex = '10';
+			}
 			
 			// Create mouse control after render is ready
 			if (render.canvas) {
@@ -100,15 +105,12 @@ window.Game = {
 					},
 				});
 				render.mouse = mouse;
-				console.log('🖱️ Mouse controls created');
 			} else {
 				console.error('❌ Render canvas is null - cannot create mouse controls');
 			}
 			
-			console.log('🎨 Render initialization complete');
 		}
 		
-		console.log('🔧 Elements initialized. Canvas:', Game.elements.canvas);
 	},
 	
 	// Crypto meme phrases for various game states
@@ -164,19 +166,39 @@ window.Game = {
 	supabaseConnected: false,
 	offlineModeLogged: false,
 	
-	sounds: {
-		click: new Audio('./assets/click.mp3'),
-		pop0: new Audio('./assets/pop0.mp3'),
-		pop1: new Audio('./assets/pop1.mp3'),
-		pop2: new Audio('./assets/pop2.mp3'),
-		pop3: new Audio('./assets/pop3.mp3'),
-		pop4: new Audio('./assets/pop4.mp3'),
-		pop5: new Audio('./assets/pop5.mp3'),
-		pop6: new Audio('./assets/pop6.mp3'),
-		pop7: new Audio('./assets/pop7.mp3'),
-		pop8: new Audio('./assets/pop8.mp3'),
-		pop9: new Audio('./assets/pop9.mp3'),
-		pop10: new Audio('./assets/pop10.mp3'),
+	sounds: null,
+	
+	initSounds: function() {
+		if (Game.sounds) return;
+		Game.sounds = {
+			click: new Audio('./assets/click.mp3'),
+			pop0: new Audio('./assets/pop0.mp3'),
+			pop1: new Audio('./assets/pop1.mp3'),
+			pop2: new Audio('./assets/pop2.mp3'),
+			pop3: new Audio('./assets/pop3.mp3'),
+			pop4: new Audio('./assets/pop4.mp3'),
+			pop5: new Audio('./assets/pop5.mp3'),
+			pop6: new Audio('./assets/pop6.mp3'),
+			pop7: new Audio('./assets/pop7.mp3'),
+			pop8: new Audio('./assets/pop8.mp3'),
+			pop9: new Audio('./assets/pop9.mp3'),
+			pop10: new Audio('./assets/pop10.mp3'),
+		};
+		// Preload sounds to avoid delays
+		Object.values(Game.sounds).forEach(audio => {
+			audio.volume = 0.5;
+			audio.preload = 'auto';
+		});
+	},
+	
+	playSound: function(soundName) {
+		try {
+			if (Game.sounds && Game.sounds[soundName]) {
+				const sound = Game.sounds[soundName].cloneNode();
+				sound.volume = 0.5;
+				sound.play().catch(() => {});
+			}
+		} catch (e) {}
 	},
 
 	stateIndex: GameStates.MENU,
@@ -190,7 +212,11 @@ window.Game = {
 		}, 0);
 
 		Game.score = score;
-		Game.elements.score.innerText = `XRP Score: ${Game.score}`;
+		if (Game.elements.score) {
+			Game.elements.score.innerText = Game.score;
+		} else {
+			console.error('❌ Score element not found!');
+		}
 		Game.updateWhaleStatus();
 		Game.updateProgressBar();
 		Game.checkSecretCodeUnlock();
@@ -237,21 +263,20 @@ window.Game = {
 
 	// XRP ecosystem token sizes with proper progression from smaller to larger elements
 	fruitSizes: [
-		{ radius: 40,  scoreValue: 1,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
-		{ radius: 48,  scoreValue: 3,  img: './assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
-		{ radius: 42,  scoreValue: 6,  img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
-		{ radius: 56,  scoreValue: 10, img: './assets/new_generated/game_ready/cropped_optimized_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
-		{ radius: 64,  scoreValue: 15, img: './assets/new_generated/game_ready/cropped_optimized_hold_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
-		{ radius: 60,  scoreValue: 21, img: './assets/new_generated/game_ready/cropped_optimized_wheal.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
-		{ radius: 52,  scoreValue: 28, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
-		{ radius: 58,  scoreValue: 36, img: './assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
-		{ radius: 72,  scoreValue: 45, img: './assets/new_generated/game_ready/cropped_optimized_Spiral_galaxy_formation.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
-		{ radius: 56,  scoreValue: 55, img: './assets/new_generated/game_ready/cropped_optimized_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
-		{ radius: 80,  scoreValue: 66, img: './assets/new_generated/game_ready/cropped_optimized_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
+		{ radius: 40,  scoreValue: 1,  img: './assets/tokens/token_01_xrp.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
+		{ radius: 48,  scoreValue: 3,  img: './assets/tokens/token_01_xrp.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
+		{ radius: 42,  scoreValue: 6,  img: './assets/tokens/token_03_rocket.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
+		{ radius: 56,  scoreValue: 10, img: './assets/tokens/token_04_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
+		{ radius: 64,  scoreValue: 15, img: './assets/tokens/token_05_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
+		{ radius: 60,  scoreValue: 21, img: './assets/tokens/token_06_whale.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
+		{ radius: 52,  scoreValue: 28, img: './assets/tokens/token_03_rocket.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
+		{ radius: 58,  scoreValue: 36, img: './assets/tokens/token_03_rocket.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
+		{ radius: 72,  scoreValue: 45, img: './assets/tokens/token_09_galaxy.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
+		{ radius: 56,  scoreValue: 55, img: './assets/tokens/token_10_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
+		{ radius: 80,  scoreValue: 66, img: './assets/tokens/token_11_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
 	],
 	currentFruitSize: 0,
 	nextFruitSize: 0,
-	state: GameStates.MENU,
 	setNextFruitSize: function () {
 		Game.nextFruitSize = Math.floor(rand() * 5);
 		const nextToken = Game.fruitSizes[Game.nextFruitSize];
@@ -261,7 +286,11 @@ window.Game = {
 	},
 
 	showHighscore: function () {
-		Game.elements.statusValue.innerText = Game.cache.highscore;
+		if (Game.elements.statusValue) {
+			Game.elements.statusValue.innerText = Game.cache.highscore;
+			} else {
+			console.error('❌ High score element not found!');
+		}
 	},
 	loadHighscore: function () {
 		const gameCache = localStorage.getItem('xrp-suika-game-cache');
@@ -332,49 +361,10 @@ window.Game = {
 		Game.updateWhaleStatus();
 	},
 	
-	startGame: function () {
-		Game.state = GameStates.READY;
-		Game.elements.startScreenOverlay.style.display = 'none';
-		Game.elements.ui.style.display = 'block';
-		
-		// Start physics engine if not already started
-		if (!gameStarted) {
-			Runner.run(runner, engine);
-			gameStarted = true;
-		}
-		
-		// Initialize game
-		Game.score = 0;
-		Game.elements.score.textContent = Game.score;
-		Game.setNextFruitSize();
-		Game.setCurrentFruitSize();
-		Game.elements.end.style.display = 'none';
-		
-		// Switch to game world
-		Composite.clear(engine.world);
-		Composite.add(engine.world, gameStatics);
-		
-		Game.calculateScore();
-		Game.updateWhaleStatus();
-		Game.updateProgressBar();
-		
-		// Initialize current token size and preview
-		Game.currentFruitSize = Game.nextFruitSize;
-		Game.setNextFruitSize();
-		
-		Game.elements.previewBall = Game.generateFruitBody(Game.width / 2, previewBallHeight, Game.currentFruitSize, { isStatic: true });
-		Composite.add(engine.world, Game.elements.previewBall);
-
-		setTimeout(() => {
-			Game.state = GameStates.READY;
-		}, 250);
-		
-		console.log('🎮 Game started!');
-	},
 	
 	showStartScreen: function () {
-		Game.state = GameStates.MENU;
-		Game.elements.startScreenOverlay.style.display = 'flex';
+		Game.stateIndex = GameStates.MENU;
+		Game.elements.startScreen.style.display = 'flex';
 		Game.elements.ui.style.display = 'none';
 		
 		// Clear the world but don't add any physics bodies
@@ -1055,13 +1045,19 @@ window.Game = {
 			textArea.select();
 			
 			try {
-				document.execCommand('copy');
-				Game.elements.shareGenericBtn.innerText = '✅ Copied to Clipboard!';
+				if (document.execCommand('copy')) {
+					Game.elements.shareGenericBtn.innerText = '✅ Copied to Clipboard!';
+					setTimeout(function() {
+						Game.elements.shareGenericBtn.innerText = '📱 Share Achievement';
+					}, 2000);
+				} else {
+					throw new Error('Copy command failed');
+				}
+			} catch (err) {
+				Game.elements.shareGenericBtn.innerText = '❌ Copy Failed';
 				setTimeout(function() {
 					Game.elements.shareGenericBtn.innerText = '📱 Share Achievement';
 				}, 2000);
-			} catch (err) {
-				console.error('Fallback share copy failed: ', err);
 			}
 			
 			document.body.removeChild(textArea);
@@ -1073,17 +1069,16 @@ window.Game = {
 		return new Promise((resolve, reject) => {
 			const imagesToLoad = [
 				...Game.fruitSizes.map(fruit => fruit.img),
-				'./assets/new_generated/optimized_Seamless_cosmic_nebula_texture.jpeg',
-				'./assets/new_generated/optimized_start_button.png',
-				'./assets/new_generated/super_opt_optimized_particle_blast.png'
+				'./assets/ui/background_nebula.jpg',
+				'./assets/ui/start_button.png',
+				'./assets/effects/particle_blast.png'
 			];
 			
 			let loadedCount = 0;
 			let failedCount = 0;
 			const totalImages = imagesToLoad.length;
 			
-			console.log(`🖼️ Preloading ${totalImages} images...`);
-			
+					
 			if (totalImages === 0) {
 				resolve();
 				return;
@@ -1094,30 +1089,24 @@ window.Game = {
 				
 				img.onload = () => {
 					loadedCount++;
-					console.log(`✅ Loaded image ${loadedCount}/${totalImages}: ${src}`);
-					
+									
 					if (loadedCount + failedCount === totalImages) {
 						if (loadedCount > 0) {
-							console.log(`🎉 Successfully loaded ${loadedCount}/${totalImages} images`);
-							resolve();
+													resolve();
 						} else {
-							console.error(`❌ Failed to load any images`);
-							reject(new Error('No images could be loaded'));
+													reject(new Error('No images could be loaded'));
 						}
 					}
 				};
 				
 				img.onerror = () => {
 					failedCount++;
-					console.warn(`⚠️ Failed to load image: ${src}`);
-					
+									
 					if (loadedCount + failedCount === totalImages) {
 						if (loadedCount > 0) {
-							console.log(`🎉 Loaded ${loadedCount}/${totalImages} images (${failedCount} failed)`);
-							resolve();
+													resolve();
 						} else {
-							console.error(`❌ Failed to load any images`);
-							reject(new Error('No images could be loaded'));
+													reject(new Error('No images could be loaded'));
 						}
 					}
 				};
@@ -1128,29 +1117,25 @@ window.Game = {
 			// Timeout after 10 seconds
 			setTimeout(() => {
 				if (loadedCount + failedCount < totalImages) {
-					console.warn(`⏰ Image loading timeout - continuing with ${loadedCount} loaded images`);
-					resolve();
+									resolve();
 				}
 			}, 10000);
 		});
 	},
 
 	initGame: async function () {
-		console.log('🎮 Initializing XRP Crypto Meme Suika Game...');
-		
 		try {
+			// Initialize sounds
+			Game.initSounds();
+			
 			// Preload images first
 			await Game.preloadImages();
 			
-			console.log('🚀 Starting game engine...');
-			
-			// Only start rendering after images are loaded - but don't add menu statics yet
-			Render.run(render);
-			// Don't start runner until game starts
+			// Don't start render or runner until game actually starts
 
 			Game.loadHighscore();
 			Game.elements.ui.style.display = 'none';
-			Game.fruitsMerged = Array.apply(null, Array(Game.fruitSizes.length)).map(() => 0);
+			Game.fruitsMerged = new Array(Game.fruitSizes.length).fill(0);
 			Game.elements.validatorStatus.innerText = 'Ready to HODL';
 			
 			// Initialize the next token preview
@@ -1167,12 +1152,8 @@ window.Game = {
 			Game.elements.shareGenericBtn.addEventListener('click', Game.shareGeneric);
 
 			// Removed menu mouse handling - start screen is now pure HTML/CSS
-			
-			console.log('✅ Game initialized successfully!');
-			
 		} catch (error) {
-			console.error('❌ Failed to initialize game:', error);
-			throw error;
+			console.error('Failed to initialize game:', error);
 		}
 	},
 
@@ -1183,9 +1164,6 @@ window.Game = {
 		if (!gameStarted) {
 			if (render) {
 				Render.run(render);
-				console.log('🎨 Render started');
-				console.log('🎨 Render canvas:', render.canvas);
-				console.log('🎨 Canvas parent:', render.canvas.parentElement);
 			}
 			Runner.run(runner, engine);
 			gameStarted = true;
@@ -1196,18 +1174,18 @@ window.Game = {
 		Composite.clear(engine.world);
 		Composite.add(engine.world, gameStatics);
 		Composite.add(engine.world, mouseConstraint);
-		console.log('🏗️ Game world initialized');
 
 		// Show game UI
 		if (Game.elements.ui) {
 			Game.elements.ui.style.display = 'block';
-			console.log('👁️ Game UI shown');
+			
+		} else {
+			console.error('❌ Game UI element not found!');
 		}
 		
 		// Show game canvas container
 		if (Game.elements.canvas) {
 			Game.elements.canvas.style.display = 'block';
-			console.log('🖼️ Game canvas shown');
 		}
 		
 		// Hide end screen
@@ -1217,10 +1195,15 @@ window.Game = {
 
 		// Initialize game state
 		Game.score = 0;
-		Game.state = GameStates.READY;
+		Game.stateIndex = GameStates.READY;
+		
+		// Ensure high score is loaded
+		Game.loadHighscore();
+		
 		Game.calculateScore();
 		Game.updateWhaleStatus();
 		Game.updateProgressBar();
+		Game.showHighscore();
 		
 		// Initialize current token size and preview
 		Game.currentFruitSize = Game.nextFruitSize || 0;
@@ -1231,13 +1214,12 @@ window.Game = {
 		Composite.add(engine.world, Game.elements.previewBall);
 
 		setTimeout(() => {
-			Game.state = GameStates.READY;
-			console.log('✅ Game ready to play!');
+			Game.stateIndex = GameStates.READY;
 		}, 250);
 
 		Events.on(mouseConstraint, 'mouseup', function (e) {
 			// Don't handle clicks if we're on the menu
-			if (Game.state === GameStates.MENU) {
+			if (Game.stateIndex === GameStates.MENU) {
 				return;
 			}
 			
@@ -1290,7 +1272,7 @@ window.Game = {
 				bodyA.popped = true;
 				bodyB.popped = true;
 
-				Game.sounds[`pop${bodyA.sizeIndex}`].play();
+				Game.playSound(`pop${bodyA.sizeIndex}`);
 				Composite.remove(engine.world, [bodyA, bodyB]);
 				Composite.add(engine.world, Game.generateFruitBody(midPosX, midPosY, newSize));
 				Game.addPop(midPosX, midPosY, bodyA.circleRadius);
@@ -1306,7 +1288,7 @@ window.Game = {
 			angle: rand() * (Math.PI * 2),
 			render: {
 				sprite: {
-					texture: './assets/img/pop.png',
+					texture: './assets/effects/pop_effect.png',
 					xScale: r / 384,
 					yScale: r / 384,
 				}
@@ -1366,10 +1348,10 @@ window.Game = {
 	addFruit: function (x) {
 		if (Game.stateIndex !== GameStates.READY) return;
 
-		Game.sounds.click.play();
+		Game.playSound('click');
 
 		Game.stateIndex = GameStates.DROP;
-		const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
+		const latestFruit = Game.generateFruitBody(x, GAME_CONSTANTS.PREVIEW_BALL_HEIGHT, Game.currentFruitSize);
 		Composite.add(engine.world, latestFruit);
 
 		Game.currentFruitSize = Game.nextFruitSize;
@@ -1377,17 +1359,17 @@ window.Game = {
 		Game.calculateScore();
 
 		Composite.remove(engine.world, Game.elements.previewBall);
-		Game.elements.previewBall = Game.generateFruitBody(render.mouse.position.x, previewBallHeight, Game.currentFruitSize, {
+		Game.elements.previewBall = Game.generateFruitBody(x, GAME_CONSTANTS.PREVIEW_BALL_HEIGHT, Game.currentFruitSize, {
 			isStatic: true,
 			collisionFilter: { mask: 0x0040 }
 		});
 
-		setTimeout(() => {
+		Game.safeTimeout(() => {
 			if (Game.stateIndex === GameStates.DROP) {
 				Composite.add(engine.world, Game.elements.previewBall);
 				Game.stateIndex = GameStates.READY;
 			}
-		}, 500);
+		}, GAME_CONSTANTS.DROP_TIMEOUT);
 	}
 }
 
@@ -1459,28 +1441,35 @@ const menuStatics = [
 
 const wallProps = {
 	isStatic: true,
-	render: { fillStyle: '#1A2A4A', strokeStyle: '#00B4FF', lineWidth: 2 },
+	render: { 
+		fillStyle: '#00FF00', // Bright green for visibility
+		strokeStyle: '#FFFF00', // Yellow stroke 
+		lineWidth: 8,
+		visible: true
+	},
 	...friction,
 };
 
 const gameStatics = [
 	// Left
-	Bodies.rectangle(-(wallPad / 2), Game.height / 2, wallPad, Game.height, wallProps),
+	Bodies.rectangle(-(GAME_CONSTANTS.WALL_PADDING / 2), Game.height / 2, GAME_CONSTANTS.WALL_PADDING, Game.height, wallProps),
 
 	// Right
-	Bodies.rectangle(Game.width + (wallPad / 2), Game.height / 2, wallPad, Game.height, wallProps),
+	Bodies.rectangle(Game.width + (GAME_CONSTANTS.WALL_PADDING / 2), Game.height / 2, GAME_CONSTANTS.WALL_PADDING, Game.height, wallProps),
 
 	// Bottom
-	Bodies.rectangle(Game.width / 2, Game.height + (wallPad / 2) - statusBarHeight, Game.width, wallPad, wallProps),
+	Bodies.rectangle(Game.width / 2, Game.height + (GAME_CONSTANTS.WALL_PADDING / 2) - GAME_CONSTANTS.STATUS_BAR_HEIGHT, Game.width, GAME_CONSTANTS.WALL_PADDING, wallProps),
 ];
 
 // Mouse control will be created after render is available
 let mouse = null;
 let mouseConstraint = null;
 
-// Don't initialize until after document loads
-
+// Debounced resize function for better performance
+let resizeTimeout;
 const resizeCanvas = () => {
+	if (resizeTimeout) clearTimeout(resizeTimeout);
+	resizeTimeout = setTimeout(() => {
 	const screenWidth = document.body.clientWidth;
 	const screenHeight = document.body.clientHeight;
 
@@ -1508,22 +1497,22 @@ const resizeCanvas = () => {
 		Game.elements.ui.style.height = `${Game.height}px`;
 		Game.elements.ui.style.transform = `scale(${scaleUI})`;
 	}
+	}, 100);
 };
 
 // Remove duplicate - startGame is now in HTML
 
 document.body.onload = () => {
-	resizeCanvas();
-	
-	// Initialize elements
+	// Initialize elements first
 	Game.initializeElements();
 	
+	// Then resize canvas now that render exists
+	resizeCanvas();
+	
 	// Start screen is visible by default in CSS
-	console.log('✅ Start screen visible, ready to play');
 	
 	// Initialize game in background
 	Game.initGame().then(() => {
-		console.log('✅ Game initialized');
 	}).catch(error => {
 		console.error('Failed to initialize game:', error);
 	});

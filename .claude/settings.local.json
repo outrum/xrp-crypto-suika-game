@@ -26,7 +26,13 @@
       "Bash(do echo \"Resizing $file to 512x512...\")",
       "Bash(do echo \"Processing $asset...\")",
       "Bash(identify:*)",
-      "Bash(do echo \"Processing $file...\")"
+      "Bash(do echo \"Processing $file...\")",
+      "Bash(ffmpeg:*)",
+      "Bash(chmod:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(# Rename token images based on their game level\nmv assets/new_generated/game_ready/cropped_optimized_xrpl_coin.png assets/tokens/token_01_xrp.png\nmv assets/new_generated/game_ready/cropped_optimized_rocket_vertical.png assets/tokens/token_03_rocket.png\nmv assets/new_generated/game_ready/cropped_optimized_diamond.png assets/tokens/token_04_diamond.png\nmv assets/new_generated/game_ready/cropped_optimized_hold_shield.png assets/tokens/token_05_shield.png\nmv assets/new_generated/game_ready/cropped_optimized_wheal.png assets/tokens/token_06_whale.png\nmv assets/new_generated/game_ready/cropped_optimized_Spiral_galaxy_formation.png assets/tokens/token_09_galaxy.png\nmv assets/new_generated/game_ready/cropped_optimized_hodl.png assets/tokens/token_10_hodl.png\nmv assets/new_generated/game_ready/cropped_optimized_crown.png assets/tokens/token_11_crown.png\n\n# Move effects\nmv assets/img/pop.png assets/effects/pop_effect.png\nmv assets/new_generated/super_opt_optimized_particle_blast.png assets/effects/particle_blast.png\n\n# Move UI elements\nmv assets/new_generated/optimized_start_button.png assets/ui/start_button.png\nmv assets/new_generated/optimized_Seamless_cosmic_nebula_texture.jpeg assets/ui/background_nebula.jpg)",
+      "Bash(# Clean up empty directories\nfind assets -type d -empty -delete)"
     ],
     "deny": []
   }

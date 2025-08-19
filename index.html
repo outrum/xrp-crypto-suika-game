@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0C152E">
   <title>XRP Crypto Meme Suika - To the Moon! 🚀</title>
   <meta property="og:title" content="XRP Crypto Meme Suika - HODL and Drop!" />
   <meta property="og:image" content="https://tombofry.github.io/suika-game/screenshot.png" />
@@ -32,6 +35,12 @@
       padding: 0;
       margin: 0;
       line-height: 1;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
     body {
@@ -41,13 +50,23 @@
         radial-gradient(circle at 10% 20%, rgba(0, 180, 255, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 90% 80%, rgba(0, 118, 192, 0.1) 0%, transparent 50%);
       color: var(--col-white);
+      overflow-x: hidden;
+      min-height: 100vh;
+      min-height: 100dvh;
+      position: relative;
     }
 
     .container {
       width: 100%;
       max-width: 640px;
       margin: 0 auto;
-      height: 100vh;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 0 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     #game-canvas {
@@ -55,10 +74,44 @@
       background: radial-gradient(circle at center, var(--col-bg-light) 0%, var(--col-bg) 100%);
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%2300B4FF" stroke-width="1" fill="none" opacity="0.1"/><path d="M30,50 L70,50 M50,30 L50,70" stroke="%2300B4FF" stroke-width="1" opacity="0.1"/></svg>');
       background-size: 100px 100px;
-      box-shadow: inset 0 0 50px rgba(0, 180, 255, 0.2);
-      width: 640px;
-      height: 960px;
+      box-shadow: 
+        inset 0 0 50px rgba(0, 180, 255, 0.2),
+        0 0 30px rgba(0, 180, 255, 0.3),
+        0 4px 20px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 2/3;
       margin: 0 auto;
+      border: 2px solid var(--col-xrp-accent);
+      border-radius: 20px;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    
+    #ground-line {
+      position: absolute;
+      bottom: 185px;
+      left: 10px;
+      right: 10px;
+      height: 10px;
+      background: linear-gradient(90deg, #00FFFF, #FFFFFF, #00FFFF);
+      box-shadow: 
+        0 0 30px #00FF00, 
+        0 4px 20px rgba(0,255,0,0.8),
+        inset 0 2px 6px rgba(255,255,255,0.5);
+      z-index: 100;
+      pointer-events: none;
+      border-radius: 6px;
+      animation: groundGlow 2s infinite ease-in-out;
+    }
+    
+    @keyframes groundGlow {
+      0%, 100% { 
+        box-shadow: 0 0 20px var(--col-xrp-accent), 0 4px 15px rgba(0,180,255,0.8), inset 0 2px 4px rgba(255,255,255,0.3);
+      }
+      50% { 
+        box-shadow: 0 0 30px var(--col-xrp-accent), 0 6px 20px rgba(0,180,255,1), inset 0 2px 4px rgba(255,255,255,0.5);
+      }
     }
     
     #game-canvas canvas {
@@ -66,7 +119,7 @@
       top: 0;
       left: 0;
       border-radius: 17px;
-      z-index: 10;
+      z-index: 1;
     }
 
     #game-ui {
@@ -78,6 +131,7 @@
       font-weight: 700;
       display: none;
       transform-origin: top left;
+      overflow: visible;
     }
 
     /* Score moved to footer - hiding old position */
@@ -99,22 +153,44 @@
 
     #game-end {
       text-align: center;
-      padding: 32px 48px;
-      background-color: var(--col-bg-lighter);
-      border: 5px solid var(--col-xrp-accent);
-      box-shadow: 0 4px 32px var(--col-shadow), var(--col-crypto-glow);
-      border-radius: 32px;
+      padding: 40px 60px;
+      background: linear-gradient(135deg, rgba(26, 42, 74, 0.98) 0%, rgba(12, 21, 46, 0.98) 100%);
+      border: 3px solid var(--col-xrp-accent);
+      box-shadow: 
+        0 0 50px rgba(0, 180, 255, 0.6),
+        0 4px 30px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(0, 180, 255, 0.2);
+      border-radius: 20px;
       margin: 0 auto;
       pointer-events: initial;
       user-select: initial;
-      background-image: var(--col-crypto-gradient);
-      animation: pulse 2s infinite;
+      backdrop-filter: blur(20px);
+      animation: gameEndPulse 2s infinite ease-in-out;
+      max-width: 500px;
     }
     
-    @keyframes pulse {
-      0% { box-shadow: 0 4px 32px var(--col-shadow), 0 0 5px var(--col-xrp-accent); }
-      50% { box-shadow: 0 4px 32px var(--col-shadow), 0 0 20px var(--col-xrp-accent); }
-      100% { box-shadow: 0 4px 32px var(--col-shadow), 0 0 5px var(--col-xrp-accent); }
+    @keyframes gameEndPulse {
+      0% { 
+        transform: scale(1);
+        box-shadow: 
+          0 0 50px rgba(0, 180, 255, 0.6),
+          0 4px 30px rgba(0, 0, 0, 0.5),
+          inset 0 0 30px rgba(0, 180, 255, 0.2);
+      }
+      50% { 
+        transform: scale(1.02);
+        box-shadow: 
+          0 0 70px rgba(0, 180, 255, 0.8),
+          0 4px 40px rgba(0, 0, 0, 0.6),
+          inset 0 0 40px rgba(0, 180, 255, 0.3);
+      }
+      100% { 
+        transform: scale(1);
+        box-shadow: 
+          0 0 50px rgba(0, 180, 255, 0.6),
+          0 4px 30px rgba(0, 0, 0, 0.5),
+          inset 0 0 30px rgba(0, 180, 255, 0.2);
+      }
     }
 
     #game-end-title {
@@ -157,38 +233,36 @@
     }
 
     #game-status {
-      position: absolute;
-      left: 0;
-      right: 0;
+      position: fixed;
+      left: 50%;
       bottom: 0;
-      height: 100px;
-      background-color: var(--col-bg-lighter);
-      display: grid;
-      grid-template-columns: 200px 1fr 200px;
-      gap: 20px;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 640px;
+      height: 70px;
+      background: linear-gradient(135deg, rgba(26, 42, 74, 0.95) 0%, rgba(12, 21, 46, 0.95) 100%);
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       border-top: 3px solid var(--col-xrp-accent);
-      box-shadow: 0 -4px 20px rgba(0,180,255,0.3);
-      background-image: linear-gradient(90deg, rgba(0,118,192,0.3) 0%, rgba(0,180,255,0.2) 100%);
-      backdrop-filter: blur(15px);
+      box-shadow: 
+        0 -4px 20px rgba(0,180,255,0.4),
+        inset 0 2px 10px rgba(0,180,255,0.2);
+      backdrop-filter: blur(20px);
       z-index: 200;
-      overflow: hidden;
       padding: 0 20px;
+      border-radius: 20px 20px 0 0;
+      margin: 0 10px;
     }
     
     #game-score {
-      font-size: 48px;
+      font-size: 36px;
       font-weight: 900;
       color: var(--col-white);
       text-shadow: 2px 2px 0 var(--col-primary);
       text-align: center;
-      padding: 8px 16px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 2px solid var(--col-xrp-accent);
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,180,255,0.5);
-      white-space: nowrap;
-      margin-bottom: 5px;
+      margin: 0;
+      line-height: 1;
     }
 
     .score-section {
@@ -200,34 +274,34 @@
 
     .game-status-item {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      height: 100%;
+      gap: 15px;
     }
     
     .game-status-inline {
       display: flex;
       align-items: center;
-      gap: 10px;
-      justify-content: center;
+      gap: 5px;
+      font-size: 14px;
+      color: var(--col-white);
+      opacity: 0.9;
     }
 
     .game-status-label {
-      color: var(--col-white);
-      font-size: 14px;
+      color: var(--col-xrp-light);
+      font-size: 11px;
       text-shadow: 0 0 4px var(--col-xrp-accent);
-      font-weight: 600;
-      opacity: 0.8;
+      font-weight: 700;
+      opacity: 0.9;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
     }
     
     .game-status-value {
       color: var(--col-white);
-      font-size: 20px;
-      font-weight: 800;
+      font-size: 16px;
+      font-weight: 700;
       text-shadow: 0 0 5px var(--col-xrp-accent);
     }
 
@@ -260,41 +334,70 @@
       }
     }
 
-    /* Simple Start Screen */
+    /* Enhanced Start Screen */
     #start-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #0C152E;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: radial-gradient(circle at center, #1A2A4A 0%, #0C152E 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 2000;
+      animation: fadeIn 0.5s ease-in;
+      padding: 20px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
     #start-screen h1 {
       color: white;
-      font-size: 48px;
-      margin-bottom: 40px;
+      font-size: 56px;
+      margin-bottom: 50px;
       text-align: center;
+      text-shadow: 0 0 20px var(--col-xrp-accent), 2px 2px 0 var(--col-primary);
+      animation: titlePulse 2s infinite ease-in-out;
+      letter-spacing: 2px;
+    }
+    
+    @keyframes titlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
     
     #start-screen button {
-      background: rgba(0, 180, 255, 0.8);
-      border: 2px solid #00B4FF;
+      background: linear-gradient(135deg, var(--col-xrp-accent) 0%, var(--col-primary) 100%);
+      border: 3px solid var(--col-xrp-accent);
       color: white;
-      font-size: 24px;
-      padding: 15px 30px;
-      border-radius: 12px;
+      font-size: 28px;
+      padding: 20px 50px;
+      border-radius: 50px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 20px rgba(0, 180, 255, 0.4), 0 0 40px rgba(0, 180, 255, 0.2);
+      transition: all 0.3s ease;
+      animation: buttonFloat 3s infinite ease-in-out;
+    }
+    
+    @keyframes buttonFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
     
     #start-screen button:hover {
-      background: rgba(0, 180, 255, 1);
+      background: linear-gradient(135deg, var(--col-primary) 0%, var(--col-xrp-accent) 100%);
+      transform: scale(1.1);
+      box-shadow: 0 6px 30px rgba(0, 180, 255, 0.6), 0 0 60px rgba(0, 180, 255, 0.4);
     }
     
     #start-screen.hidden {
@@ -327,15 +430,12 @@
     }
 
     #game-next-fruit {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      filter: drop-shadow(0 0 5px var(--col-xrp-accent)) drop-shadow(0 0 10px rgba(0,180,255,0.3));
-      animation: float 2s infinite ease-in-out, glow 3s infinite ease-in-out;
-      border: 2px solid rgba(0,180,255,0.3);
-      background: radial-gradient(circle at center, rgba(0,180,255,0.1) 0%, transparent 70%);
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px var(--col-xrp-accent));
+      animation: float 2s infinite ease-in-out;
       transition: all 0.3s ease;
-      margin-top: 4px;
     }
 
     #progress-text {
@@ -752,16 +852,38 @@
 
     /* Responsive Design for Mobile and Small Screens */
     @media (max-width: 768px) {
+      .container {
+        padding: 0 5px;
+      }
+      
+      #game-canvas {
+        border-radius: 15px;
+        margin-bottom: 90px;
+      }
+      
+      #ground-line {
+        bottom: 165px;
+        height: 8px;
+      }
+      
+      #start-screen h1 {
+        font-size: 42px;
+        margin-bottom: 30px;
+      }
+      
+      #start-screen button {
+        font-size: 24px;
+        padding: 18px 40px;
+      }
+      
       #game-status {
-        height: 90px;
-        grid-template-columns: 180px 1fr 180px;
-        gap: 15px;
-        padding: 0 10px;
+        height: 70px;
+        padding: 0 15px;
+        margin: 0 5px;
       }
 
       #game-score {
-        font-size: 36px;
-        padding: 6px 12px;
+        font-size: 28px;
       }
 
       .game-status-label {
@@ -824,16 +946,46 @@
     }
 
     @media (max-width: 480px) {
+      .container {
+        padding: 0 3px;
+      }
+      
+      #game-canvas {
+        border-radius: 12px;
+        margin-bottom: 80px;
+      }
+      
+      #ground-line {
+        bottom: 155px;
+        height: 6px;
+      }
+      
+      #start-screen h1 {
+        font-size: 36px;
+        margin-bottom: 25px;
+      }
+      
+      #start-screen button {
+        font-size: 20px;
+        padding: 15px 35px;
+        min-height: 50px;
+        min-width: 200px;
+      }
+      
       #game-status {
-        height: 80px;
-        grid-template-columns: 140px 1fr 140px;
-        gap: 10px;
-        padding: 0 8px;
+        height: 65px;
+        padding: 0 12px;
+        margin: 0 3px;
+        bottom: env(safe-area-inset-bottom, 0);
       }
 
       #game-score {
-        font-size: 30px;
-        padding: 4px 10px;
+        font-size: 24px;
+      }
+      
+      #game-next-fruit {
+        width: 35px;
+        height: 35px;
       }
 
       .game-status-label {
@@ -890,6 +1042,54 @@
         font-size: 14px;
       }
     }
+    
+    /* Landscape orientation optimizations */
+    @media (orientation: landscape) and (max-height: 600px) {
+      .container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+        padding: 10px;
+      }
+      
+      #game-canvas {
+        max-height: calc(100vh - 20px);
+        width: auto;
+        aspect-ratio: 2/3;
+      }
+      
+      #start-screen h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+      
+      #start-screen button {
+        font-size: 18px;
+        padding: 12px 30px;
+      }
+      
+      #game-status {
+        position: fixed;
+        left: 10px;
+        right: auto;
+        bottom: 10px;
+        transform: none;
+        width: 300px;
+        height: 60px;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0;
+      }
+      
+      #game-score {
+        font-size: 20px;
+      }
+      
+      #game-next-fruit {
+        width: 30px;
+        height: 30px;
+      }
+    }
 
     /* Threshold reached celebration effect */
     #progress-container.threshold-reached {
@@ -941,59 +1141,61 @@
 </head>
 <body>
   <!-- Simple Start Screen -->
-  <div id="start-screen">
+  <div id="start-screen" role="main" aria-label="Game start screen">
     <h1>XRP CRYPTO SUIKA</h1>
-    <button onclick="startGame()">🎮 START GAME 🎮</button>
+    <button onclick="startGame()" aria-label="Start the XRP Crypto Suika game">🎮 START GAME 🎮</button>
   </div>
 
   <div class="container">
-    <div id="game-canvas">
-      <div id="game-ui">
+    <div id="game-canvas" role="application" aria-label="XRP Crypto Suika game canvas">
+      <div id="ground-line" aria-hidden="true"></div>
+      <div id="game-ui" aria-live="polite">
 
-        <div id="game-end-container">
+        <div id="game-end-container" role="dialog" aria-modal="true" aria-labelledby="game-end-title">
           <div id="game-end">
             <div id="game-end-title">Ledger Closed!</div>
             <div id="game-end-subtitle" style="font-size: 18px; color: var(--col-xrp-light); margin-bottom: 8px;">Time to HODL and try again! 🚀</div>
-            <a id="game-end-link" href="">To the Moon! 🌙</a>
+            <a id="game-end-link" href="" aria-label="Play again">To the Moon! 🌙</a>
           </div>
         </div>
 
-
-        <div id="game-status">
-          <!-- Next Drop -->
-          <div class="game-status-item">
-            <div class="game-status-label">Next Drop</div>
-            <img id="game-next-fruit" src="./assets/img/tokens/token0.png" />
-          </div>
-          
-          <!-- Center Area (empty for visual balance) -->
-          <div></div>
-          
-          <!-- Score Section -->
-          <div class="score-section">
-            <div id="game-score">0</div>
-            <div class="game-status-inline">
-              <div class="game-status-label">High Score:</div>
-              <div id="game-highscore-value" class="game-status-value">0</div>
-            </div>
-            <div id="validator-status" style="display: none;">Ready to HODL</div>
-            <!-- Hidden progress elements to prevent JS errors -->
-            <div id="progress-container-inline" style="display: none;">
-              <div id="progress-label-inline"></div>
-              <div id="progress-bar-inline">
-                <div id="progress-fill"></div>
-              </div>
-              <div id="progress-text">0%</div>
-            </div>
-          </div>
-        </div>
 
       </div>
     </div>
   </div>
   
+  <!-- Footer Status Bar - Outside of scaled UI container -->
+  <div id="game-status">
+    <!-- Next Drop -->
+    <div class="game-status-item">
+      <span class="game-status-label">Next Drop</span>
+      <img id="game-next-fruit" src="./assets/tokens/token_01_xrp.png" alt="Next token to drop" />
+    </div>
+    
+    <!-- Score Section -->
+    <div class="score-section">
+      <div>
+        <div id="game-score">0</div>
+        <div class="game-status-inline">
+          <span>High Score:</span>
+          <span id="game-highscore-value" class="game-status-value">0</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Hidden elements to prevent JS errors -->
+    <div id="validator-status" style="display: none;">Ready to HODL</div>
+    <div id="progress-container-inline" style="display: none;">
+      <div id="progress-label-inline"></div>
+      <div id="progress-bar-inline">
+        <div id="progress-fill"></div>
+      </div>
+      <div id="progress-text">0%</div>
+    </div>
+  </div>
+  
   <!-- Secret Code Popup - Outside game-ui to prevent scaling issues -->
-  <div id="secret-code-popup" style="display: none;">
+  <div id="secret-code-popup" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="secret-code-title">
     <div id="secret-code-content">
       <div id="secret-code-title">🎉 SECRET CODE UNLOCKED! 🎉</div>
       <div id="secret-code-message"></div>
@@ -1002,15 +1204,15 @@
         <button id="copy-code-btn">📋 Copy Code</button>
       </div>
       <div id="secret-code-actions">
-        <button id="share-twitter-btn">🐦 Share on Twitter</button>
-        <button id="share-generic-btn">📱 Share Achievement</button>
-        <button id="close-popup-btn">Continue Playing</button>
+        <button id="share-twitter-btn" aria-label="Share achievement on Twitter">🐦 Share on Twitter</button>
+        <button id="share-generic-btn" aria-label="Share achievement">📱 Share Achievement</button>
+        <button id="close-popup-btn" aria-label="Close popup and continue playing">Continue Playing</button>
       </div>
     </div>
   </div>
   
   <script type="text/javascript" src="./matter.js"></script>
-  <script type="module" src="./index.js?v=13"></script>
+  <script type="module" src="./index.js?v=39"></script>
   <script>
     // Global startGame function for button onclick
     window.startGame = function() {
