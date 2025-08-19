@@ -261,20 +261,43 @@
     }
 
     .game-status-label {
-      color: var(--col-white);
-      font-size: 14px;
-      text-shadow: 0 0 4px var(--col-xrp-accent);
-      font-weight: 600;
-      opacity: 0.8;
+      color: rgba(0, 180, 255, 0.9);
+      font-size: 11px;
+      text-shadow: 
+        0 0 8px rgba(0, 180, 255, 0.8),
+        0 0 15px rgba(0, 180, 255, 0.6),
+        0 1px 0 rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+      opacity: 0.95;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 2px;
+      margin-bottom: 2px;
+      font-family: 'Space Grotesk', 'Roboto Mono', monospace;
+      animation: holographicTextPulse 2s infinite ease-in-out;
+      position: relative;
+    }
+    
+    .game-status-label::before {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: rgba(247, 147, 26, 0.3);
+      text-shadow: 0 0 5px rgba(247, 147, 26, 0.5);
+      z-index: -1;
+      animation: holographicGhost 3s infinite ease-in-out;
     }
     
     .game-status-value {
-      color: var(--col-white);
-      font-size: 20px;
-      font-weight: 800;
-      text-shadow: 0 0 5px var(--col-xrp-accent);
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 16px;
+      font-weight: 700;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(0, 180, 255, 0.6),
+        0 0 30px rgba(0, 180, 255, 0.4);
+      font-family: 'Space Grotesk', 'Roboto Mono', monospace;
+      animation: holographicDataGlow 2.5s infinite ease-in-out;
     }
 
     #game-highscore-value {
@@ -1048,6 +1071,55 @@
       }
       50% {
         opacity: 0.6;
+      }
+    }
+    
+    @keyframes holographicTextPulse {
+      0%, 100% {
+        text-shadow: 
+          0 0 8px rgba(0, 180, 255, 0.8),
+          0 0 15px rgba(0, 180, 255, 0.6),
+          0 1px 0 rgba(0, 0, 0, 0.8);
+        opacity: 0.95;
+      }
+      50% {
+        text-shadow: 
+          0 0 12px rgba(0, 180, 255, 1),
+          0 0 25px rgba(0, 180, 255, 0.8),
+          0 0 35px rgba(247, 147, 26, 0.4),
+          0 1px 0 rgba(0, 0, 0, 0.8);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes holographicGhost {
+      0%, 100% {
+        transform: translateX(0);
+        opacity: 0.3;
+      }
+      25% {
+        transform: translateX(1px);
+        opacity: 0.2;
+      }
+      75% {
+        transform: translateX(-1px);
+        opacity: 0.4;
+      }
+    }
+    
+    @keyframes holographicDataGlow {
+      0%, 100% {
+        text-shadow: 
+          0 0 10px rgba(255, 255, 255, 0.8),
+          0 0 20px rgba(0, 180, 255, 0.6),
+          0 0 30px rgba(0, 180, 255, 0.4);
+      }
+      50% {
+        text-shadow: 
+          0 0 15px rgba(255, 255, 255, 1),
+          0 0 30px rgba(0, 180, 255, 0.8),
+          0 0 45px rgba(0, 180, 255, 0.6),
+          0 0 60px rgba(247, 147, 26, 0.3);
       }
     }
   </style>
