@@ -21,21 +21,22 @@ const {
 
 // Game constants for better maintainability
 const GAME_CONSTANTS = {
-	WALL_PADDING: 64,
+	WALL_PADDING: 120,
 	LOSE_HEIGHT: 84,
 	STATUS_BAR_HEIGHT: 185,
 	PREVIEW_BALL_HEIGHT: 32,
 	PREVIEW_DROP_HEIGHT: 150,
 	FRICTION: {
-		friction: 0.006,
-		frictionStatic: 0.006,
-		frictionAir: 0,
-		restitution: 0.1
+		friction: 0.3,      // More friction for realistic sliding
+		frictionStatic: 0.5, // Higher static friction to prevent sliding when settled
+		frictionAir: 0.001,  // Slight air resistance for natural falling
+		restitution: 0.2     // Slightly bouncy but not too much
 	},
 	IMAGE_LOAD_TIMEOUT: 10000,
 	FEEDBACK_TIMEOUT: 2000,
 	GAME_READY_TIMEOUT: 250,
 	DROP_TIMEOUT: 500,
+	DROP_COOLDOWN: 800, // Minimum time between drops (milliseconds)
 	POP_EFFECT_TIMEOUT: 100,
 	THRESHOLD_CELEBRATION_TIMEOUT: 1000
 };
@@ -115,11 +116,16 @@ window.Game = {
 				mouseConstraint = MouseConstraint.create(engine, {
 					mouse: mouse,
 					constraint: {
-						stiffness: 0.2,
+						stiffness: 0.1, // Lower stiffness for less influence
+						damping: 0.9,   // High damping to reduce oscillation
 						render: {
 							visible: false,
 						},
 					},
+					// Only allow interaction with static objects (preview ball)
+					collisionFilter: {
+						mask: 0x0002 // Only interact with category 0x0002 (static preview objects)
+					}
 				});
 				render.mouse = mouse;
 			} else {
@@ -533,19 +539,19 @@ window.Game = {
 		}
 	},
 
-	// XRP ecosystem token sizes with proper progression from smaller to larger elements
+	// XRP ecosystem token sizes - BETTER SIZE with safe physics boundaries
 	fruitSizes: [
-		{ radius: 40,  scoreValue: 1,  img: './assets/tokens/token_01_xrp.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
-		{ radius: 48,  scoreValue: 3,  img: './assets/tokens/token_01_xrp.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
-		{ radius: 42,  scoreValue: 6,  img: './assets/tokens/token_03_rocket.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
-		{ radius: 56,  scoreValue: 10, img: './assets/tokens/token_04_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
-		{ radius: 64,  scoreValue: 15, img: './assets/tokens/token_05_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
-		{ radius: 60,  scoreValue: 21, img: './assets/tokens/token_06_whale.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
-		{ radius: 52,  scoreValue: 28, img: './assets/tokens/token_03_rocket.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
-		{ radius: 58,  scoreValue: 36, img: './assets/tokens/token_03_rocket.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
-		{ radius: 72,  scoreValue: 45, img: './assets/tokens/token_09_galaxy.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
-		{ radius: 56,  scoreValue: 55, img: './assets/tokens/token_10_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
-		{ radius: 80,  scoreValue: 66, img: './assets/tokens/token_11_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
+		{ radius: 28,  scoreValue: 1,  img: './assets/tokens/token_01_xrp.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
+		{ radius: 33,  scoreValue: 3,  img: './assets/tokens/token_01_xrp.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
+		{ radius: 38,  scoreValue: 6,  img: './assets/tokens/token_03_rocket.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
+		{ radius: 43,  scoreValue: 10, img: './assets/tokens/token_04_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
+		{ radius: 48,  scoreValue: 15, img: './assets/tokens/token_05_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
+		{ radius: 53,  scoreValue: 21, img: './assets/tokens/token_06_whale.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
+		{ radius: 58,  scoreValue: 28, img: './assets/tokens/token_03_rocket.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
+		{ radius: 63,  scoreValue: 36, img: './assets/tokens/token_03_rocket.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
+		{ radius: 68,  scoreValue: 45, img: './assets/tokens/token_09_galaxy.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
+		{ radius: 73,  scoreValue: 55, img: './assets/tokens/token_10_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
+		{ radius: 78,  scoreValue: 66, img: './assets/tokens/token_11_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
 	],
 	currentFruitSize: 0,
 	nextFruitSize: 0,
@@ -1485,7 +1491,12 @@ window.Game = {
 		Game.setNextFruitSize();
 		
 		const previewBallHeight = 150;
-		Game.elements.previewBall = Game.generateFruitBody(Game.width / 2, previewBallHeight, Game.currentFruitSize, { isStatic: true });
+		Game.elements.previewBall = Game.generateFruitBody(Game.width / 2, previewBallHeight, Game.currentFruitSize, { 
+			isStatic: true,
+			collisionFilter: {
+				category: 0x0002 // Static preview objects that can be moved by mouse
+			}
+		});
 		Composite.add(engine.world, Game.elements.previewBall);
 
 		setTimeout(() => {
@@ -1566,7 +1577,6 @@ window.Game = {
 	addPop: function (x, y, r) {
 		const circle = Bodies.circle(x, y, r, {
 			isStatic: true,
-			collisionFilter: { mask: 0x0040 },
 			angle: rand() * (Math.PI * 2),
 			render: {
 				sprite: {
@@ -1621,15 +1631,40 @@ window.Game = {
 	generateFruitBody: function (x, y, sizeIndex, extraConfig = {}) {
 		const size = Game.fruitSizes[sizeIndex];
 		
-		// Calculate scale based on actual image dimensions to fit circle
+		// Calculate scale to better match visual boundaries with physics circles
 		const targetDiameter = size.radius * 2;
-		const maxImageDimension = Math.max(size.imgWidth, size.imgHeight);
-		const scale = targetDiameter / maxImageDimension;
+		
+		// Scale visuals to fill most of the physics circle - eliminate crazy gaps
+		let scale;
+		
+		// Better scaling - good size without excessive overlap
+		const targetFillRatio = 1.35; // Fill 135% - noticeable size with controlled overlap
+		const maxDimension = Math.max(size.imgWidth, size.imgHeight);
+		scale = (targetDiameter * targetFillRatio) / maxDimension;
+		
+		// Apply minor adjustments for specific shapes
+		if (size.img.includes('rocket')) {
+			// Rockets are tall/narrow, can scale them up more
+			scale *= 1.1;
+		} else if (sizeIndex === 9) { // HODL token (very wide text)
+			// HODL is very wide, scale down slightly
+			scale *= 0.9;
+		} else if (size.img.includes('whale')) {
+			// Whales are wide, standard scaling
+			scale *= 1.0;
+		}
+		
+		const defaultCollisionFilter = {
+			category: 0x0001, // Default category for game objects
+			mask: 0xFFFF // Can collide with everything
+		};
 		
 		const circle = Bodies.circle(x, y, size.radius, {
 			...friction,
-			...extraConfig,
 			render: { sprite: { texture: size.img, xScale: scale, yScale: scale } },
+			// Default collision filter for game objects - can't be grabbed by mouse
+			collisionFilter: extraConfig.collisionFilter || defaultCollisionFilter,
+			...extraConfig
 		});
 		circle.sizeIndex = sizeIndex;
 		circle.popped = false;
@@ -1647,6 +1682,12 @@ window.Game = {
 
 		Game.stateIndex = GameStates.DROP;
 		const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
+		
+		// Ensure object falls straight down with no initial velocity or rotation
+		Matter.Body.setVelocity(latestFruit, { x: 0, y: 0 });
+		Matter.Body.setAngularVelocity(latestFruit, 0);
+		Matter.Body.setAngle(latestFruit, 0);
+		
 		Composite.add(engine.world, latestFruit);
 
 		Game.currentFruitSize = Game.nextFruitSize;
@@ -1654,21 +1695,42 @@ window.Game = {
 		Game.calculateScore();
 
 		Composite.remove(engine.world, Game.elements.previewBall);
+		
+		// Create preview ball (will be semi-transparent during cooldown)
 		Game.elements.previewBall = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize, {
 			isStatic: true,
-			collisionFilter: { mask: 0x0040 }
+			collisionFilter: {
+				category: 0x0002 // Static preview objects that can be moved by mouse
+			}
 		});
+		
+		// Make it semi-transparent to show cooldown
+		if (Game.elements.previewBall && Game.elements.previewBall.render) {
+			Game.elements.previewBall.render.opacity = 0.3;
+		}
 
+		// Add cooldown before allowing next drop
 		setTimeout(() => {
 			if (Game.stateIndex === GameStates.DROP) {
 				Composite.add(engine.world, Game.elements.previewBall);
-				Game.stateIndex = GameStates.READY;
+				
+				// Gradually restore opacity to show cooldown ending
+				setTimeout(() => {
+					if (Game.elements.previewBall && Game.elements.previewBall.render) {
+						Game.elements.previewBall.render.opacity = 1.0;
+					}
+					Game.stateIndex = GameStates.READY;
+				}, GAME_CONSTANTS.DROP_COOLDOWN - 100);
 			}
-		}, 500);
+		}, 100);
 	}
 }
 
 const engine = Engine.create();
+// Set proper gravity for natural falling
+engine.gravity.y = 1.2; // Slightly stronger gravity for better fall feel
+engine.gravity.x = 0;
+engine.gravity.scale = 0.001;
 const runner = Runner.create();
 let render = null; // Will be created after elements are initialized
 
@@ -1741,12 +1803,24 @@ const menuStatics = [
 const wallProps = {
 	isStatic: true,
 	render: { 
-		fillStyle: '#00FF00', // Bright green for visibility
-		strokeStyle: '#FFFF00', // Yellow stroke 
+		fillStyle: 'rgba(15, 0, 30, 0.95)', // More solid alien surface
+		strokeStyle: 'rgba(0, 255, 127, 0.9)', // Alien green glow
 		lineWidth: 8,
 		visible: true
 	},
-	...friction,
+	// Force collision with all objects - no exceptions
+	collisionFilter: {
+		category: 0x0001,
+		mask: 0xFFFF,
+		group: 0
+	},
+	// Realistic wall physics
+	restitution: 0.1,    // Low bounce off walls
+	friction: 0.3,       // Some friction when sliding against walls
+	frictionStatic: 0.5, // Prevent sliding when resting against walls
+	frictionAir: 0,
+	inertia: Infinity, // Prevent rotation
+	inverseInertia: 0
 };
 
 const gameStatics = [
