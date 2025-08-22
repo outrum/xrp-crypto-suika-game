@@ -122,8 +122,9 @@ window.Game = {
 							visible: false,
 						},
 					},
-					// Only allow interaction with static objects (preview ball)
+					// Only allow interaction with static preview objects
 					collisionFilter: {
+						category: 0x0004, // Mouse constraint has its own category
 						mask: 0x0002 // Only interact with category 0x0002 (static preview objects)
 					}
 				});
@@ -1684,7 +1685,7 @@ window.Game = {
 		
 		const defaultCollisionFilter = {
 			category: 0x0001, // Default category for game objects
-			mask: 0xFFFF // Can collide with everything
+			mask: 0x0001 | 0x0008 // Collide with other game objects (0x0001) and walls (0x0008)
 		};
 		
 		const circle = Bodies.circle(x, y, size.radius, {
@@ -1732,6 +1733,27 @@ window.Game = {
 		Matter.Body.setVelocity(latestFruit, { x: 0, y: 0 });
 		Matter.Body.setAngularVelocity(latestFruit, 0);
 		Matter.Body.setAngle(latestFruit, 0);
+		
+		// CRITICAL FIX: Ensure the dropped fruit cannot be influenced by mouse
+		// Set inertia to prevent unwanted rotation initially
+		Matter.Body.setInertia(latestFruit, Infinity);
+		
+		// Extra safeguard: Ensure the fruit is not selectable by mouse
+		latestFruit.collisionFilter.group = -1; // Negative group prevents mouse interaction
+		
+		// After a brief moment, restore normal inertia for natural physics
+		setTimeout(() => {
+			if (latestFruit && !latestFruit.popped) {
+				// Calculate proper inertia based on mass and radius
+				const normalInertia = latestFruit.mass * Math.pow(latestFruit.circleRadius, 2) / 2;
+				Matter.Body.setInertia(latestFruit, normalInertia);
+				// Also ensure velocity is still straight down
+				if (Math.abs(latestFruit.velocity.x) > 0.01) {
+					console.log('⚠️ Correcting sideways drift:', latestFruit.velocity.x);
+					Matter.Body.setVelocity(latestFruit, { x: 0, y: latestFruit.velocity.y });
+				}
+			}
+		}, 100); // After 100ms, allow normal rotation
 		
 		console.log('🎯 AFTER RESET:');
 		console.log('  Velocity after reset:', latestFruit.velocity);
@@ -1868,10 +1890,10 @@ const wallProps = {
 		lineWidth: 8,
 		visible: true
 	},
-	// Force collision with all objects - no exceptions
+	// Walls have their own collision category
 	collisionFilter: {
-		category: 0x0001,
-		mask: 0xFFFF,
+		category: 0x0008, // Wall category
+		mask: 0xFFFF, // Walls can collide with everything
 		group: 0
 	},
 	// Realistic wall physics
