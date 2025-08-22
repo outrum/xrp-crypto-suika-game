@@ -1520,6 +1520,34 @@ window.Game = {
 			Game.elements.previewBall.position.x = e.mouse.position.x;
 		});
 
+		// Add physics debugging - monitor velocity changes during physics updates
+		let physicsLogCount = 0;
+		Events.on(engine, 'beforeUpdate', function (e) {
+			physicsLogCount++;
+			// Log every 60 frames (approximately 1 second) for recently dropped objects
+			if (physicsLogCount % 60 === 0) {
+				const recentBodies = engine.world.bodies.filter(body => 
+					!body.isStatic && 
+					body.sizeIndex !== undefined && 
+					Date.now() - (body.dropTime || 0) < 3000 // Within 3 seconds of drop
+				);
+				
+				if (recentBodies.length > 0) {
+					console.log('📊 PHYSICS UPDATE - Recent dropped bodies:', recentBodies.length);
+					recentBodies.forEach((body, index) => {
+						if (index < 3) { // Only log first 3 to avoid spam
+							console.log(`  Body ${index}:`, {
+								position: `(${body.position.x.toFixed(1)}, ${body.position.y.toFixed(1)})`,
+								velocity: `(${body.velocity.x.toFixed(3)}, ${body.velocity.y.toFixed(3)})`,
+								angularVelocity: body.angularVelocity.toFixed(3),
+								angle: body.angle.toFixed(3)
+							});
+						}
+					});
+				}
+			}
+		});
+		
 		Events.on(engine, 'collisionStart', function (e) {
 			for (let i = 0; i < e.pairs.length; i++) {
 				const { bodyA, bodyB } = e.pairs[i];
@@ -1675,6 +1703,11 @@ window.Game = {
 	addFruit: function (x) {
 		if (Game.stateIndex !== GameStates.READY) return;
 
+		console.log('🎯 DROPPING FRUIT - Starting drop sequence');
+		console.log('Drop X position:', x);
+		console.log('Drop Y position:', previewBallHeight);
+		console.log('Current fruit size index:', Game.currentFruitSize);
+
 		Game.playSound('click', {
 			event: 'interaction',
 			position: { x: Game.mouse?.position?.x || 0, y: Game.mouse?.position?.y || 0 }
@@ -1683,12 +1716,39 @@ window.Game = {
 		Game.stateIndex = GameStates.DROP;
 		const latestFruit = Game.generateFruitBody(x, previewBallHeight, Game.currentFruitSize);
 		
+		console.log('🔍 FRUIT BODY CREATED:');
+		console.log('  Position:', latestFruit.position);
+		console.log('  Velocity before reset:', latestFruit.velocity);
+		console.log('  Angular velocity before reset:', latestFruit.angularVelocity);
+		console.log('  Angle before reset:', latestFruit.angle);
+		console.log('  Friction properties:', {
+			friction: latestFruit.friction,
+			frictionStatic: latestFruit.frictionStatic,
+			frictionAir: latestFruit.frictionAir,
+			restitution: latestFruit.restitution
+		});
+		
 		// Ensure object falls straight down with no initial velocity or rotation
 		Matter.Body.setVelocity(latestFruit, { x: 0, y: 0 });
 		Matter.Body.setAngularVelocity(latestFruit, 0);
 		Matter.Body.setAngle(latestFruit, 0);
 		
+		console.log('🎯 AFTER RESET:');
+		console.log('  Velocity after reset:', latestFruit.velocity);
+		console.log('  Angular velocity after reset:', latestFruit.angularVelocity);
+		console.log('  Angle after reset:', latestFruit.angle);
+		
+		// Mark with drop time for physics tracking
+		latestFruit.dropTime = Date.now();
+		
 		Composite.add(engine.world, latestFruit);
+		
+		// Log physics engine state
+		console.log('🌍 ENGINE STATE:');
+		console.log('  Gravity X:', engine.gravity.x);
+		console.log('  Gravity Y:', engine.gravity.y);
+		console.log('  Gravity scale:', engine.gravity.scale);
+		console.log('  World bodies count:', engine.world.bodies.length);
 
 		Game.currentFruitSize = Game.nextFruitSize;
 		Game.setNextFruitSize();
