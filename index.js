@@ -170,14 +170,76 @@ window.Game = {
 		codeUnlockDates: [null, null, null, null, null]
 	},
 	
-	// Secret code system
-	secretCodes: [
-		{ threshold: 100, code: "TOTHEMOON", revealed: false, message: "🚀 First milestone reached! You're heading to the moon!" },
-		{ threshold: 500, code: "DIAMONDHANDS", revealed: false, message: "💎🙌 Diamond hands detected! HODL strong!" },
-		{ threshold: 1000, code: "HODLGANG", revealed: false, message: "💪 Welcome to the HODL gang! Never selling!" },
-		{ threshold: 2500, code: "XRPWHALE", revealed: false, message: "🐋 Whale status achieved! You're swimming with the big fish!" },
-		{ threshold: 5000, code: "CRYPTOGOD", revealed: false, message: "⚡ Crypto God mode activated! Ultimate achievement unlocked!" }
+	// Level system configuration
+	levelConfigs: [
+		null, // Index 0 unused
+		// Level 1 - Beginner (3 tokens)
+		{
+			level: 1,
+			maxTokenIndex: 2, // Tokens 0-2
+			secretCode: { threshold: 100, code: "BEGINNERXRP", revealed: false, message: "🎯 First level complete! You've started your XRP journey!" }
+		},
+		// Level 2 - Rising Star (4 tokens)
+		{
+			level: 2,
+			maxTokenIndex: 3, // Tokens 0-3
+			secretCode: { threshold: 200, code: "RISINGSTAR", revealed: false, message: "⭐ Rising star! You're gaining momentum!" }
+		},
+		// Level 3 - Moon Bound (5 tokens)
+		{
+			level: 3,
+			maxTokenIndex: 4, // Tokens 0-4
+			secretCode: { threshold: 400, code: "MOONBOUND", revealed: false, message: "🌙 Moon bound! The rocket is fueling up!" }
+		},
+		// Level 4 - Diamond (6 tokens)
+		{
+			level: 4,
+			maxTokenIndex: 5, // Tokens 0-5
+			secretCode: { threshold: 600, code: "DIAMOND", revealed: false, message: "💎 Diamond level achieved! Your hands are getting stronger!" }
+		},
+		// Level 5 - HODL Master (7 tokens)
+		{
+			level: 5,
+			maxTokenIndex: 6, // Tokens 0-6
+			secretCode: { threshold: 1000, code: "HODLMASTER", revealed: false, message: "💪 HODL Master! You've proven your dedication!" }
+		},
+		// Level 6 - Whale Watch (8 tokens)
+		{
+			level: 6,
+			maxTokenIndex: 7, // Tokens 0-7
+			secretCode: { threshold: 1500, code: "WHALEWATCH", revealed: false, message: "🐋 Whale watching! You're swimming with the big players!" }
+		},
+		// Level 7 - Rocket Fuel (9 tokens)
+		{
+			level: 7,
+			maxTokenIndex: 8, // Tokens 0-8
+			secretCode: { threshold: 2000, code: "ROCKETFUEL", revealed: false, message: "🚀 Rocket fuel loaded! Prepare for launch!" }
+		},
+		// Level 8 - Galaxy XRP (10 tokens)
+		{
+			level: 8,
+			maxTokenIndex: 9, // Tokens 0-9
+			secretCode: { threshold: 3000, code: "GALAXYXRP", revealed: false, message: "🌌 Galaxy XRP! You've reached interstellar status!" }
+		},
+		// Level 9 - Crypto Lord (11 tokens)
+		{
+			level: 9,
+			maxTokenIndex: 10, // All 11 tokens
+			secretCode: { threshold: 5000, code: "CRYPTOLORD", revealed: false, message: "👑 Crypto Lord! You're ruling the blockchain!" }
+		},
+		// Level 10 - XRP Legend (All tokens + bonus)
+		{
+			level: 10,
+			maxTokenIndex: 10, // All 11 tokens
+			secretCode: { threshold: 10000, code: "XRPLEGEND", revealed: false, message: "⚡👑 XRP LEGEND! You've achieved the impossible! Ultimate mastery unlocked!" }
+		}
 	],
+	
+	// Current level (will be set from URL)
+	currentLevel: 1,
+	
+	// Secret codes for current level (dynamically loaded)
+	secretCodes: [],
 	
 	// Progress tracking
 	currentProgressThreshold: 100,
@@ -541,7 +603,8 @@ window.Game = {
 	},
 
 	// XRP ecosystem token sizes - BETTER SIZE with safe physics boundaries
-	fruitSizes: [
+	// All available tokens (full set)
+	allFruitSizes: [
 		{ radius: 28,  scoreValue: 1,  img: './assets/tokens/token_01_xrp.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
 		{ radius: 33,  scoreValue: 3,  img: './assets/tokens/token_01_xrp.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
 		{ radius: 38,  scoreValue: 6,  img: './assets/tokens/token_03_rocket.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
@@ -554,14 +617,73 @@ window.Game = {
 		{ radius: 73,  scoreValue: 55, img: './assets/tokens/token_10_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
 		{ radius: 78,  scoreValue: 66, img: './assets/tokens/token_11_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
 	],
+	
+	// Level-specific tokens (will be filtered based on current level)
+	fruitSizes: [],
 	currentFruitSize: 0,
 	nextFruitSize: 0,
 	setNextFruitSize: function () {
-		Game.nextFruitSize = Math.floor(rand() * 5);
+		// Limit random selection based on level (first 5 tokens of available set)
+		const maxRandomIndex = Math.min(4, Game.fruitSizes.length - 1);
+		Game.nextFruitSize = Math.floor(rand() * (maxRandomIndex + 1));
 		const nextToken = Game.fruitSizes[Game.nextFruitSize];
 		Game.elements.nextFruitImg.src = nextToken.img;
 		Game.elements.nextFruitImg.alt = nextToken.name;
 		Game.elements.nextFruitImg.title = nextToken.name;
+	},
+	
+	detectLevelFromURL: function() {
+		// Check URL path for level
+		const path = window.location.pathname;
+		const levelMatch = path.match(/\/level(\d+)\//i);
+		
+		if (levelMatch) {
+			const level = parseInt(levelMatch[1]);
+			if (level >= 1 && level <= 10) {
+				return level;
+			}
+		}
+		
+		// Default to level 1 if no valid level found
+		return 1;
+	},
+	
+	initializeLevel: function() {
+		// Detect current level from URL
+		Game.currentLevel = Game.detectLevelFromURL();
+		
+		// Get level configuration
+		const levelConfig = Game.levelConfigs[Game.currentLevel];
+		
+		if (!levelConfig) {
+			console.error('Invalid level configuration');
+			return;
+		}
+		
+		// Filter tokens based on level
+		Game.fruitSizes = Game.allFruitSizes.slice(0, levelConfig.maxTokenIndex + 1);
+		
+		// Set secret codes for this level (only one code per level)
+		Game.secretCodes = [levelConfig.secretCode];
+		
+		// Update UI to show level
+		Game.updateLevelUI();
+		
+		console.log(`🎮 Level ${Game.currentLevel} initialized with ${Game.fruitSizes.length} tokens`);
+		console.log(`🔐 Secret code "${levelConfig.secretCode.code}" unlocks at ${levelConfig.secretCode.threshold} points`);
+	},
+	
+	updateLevelUI: function() {
+		// Update title to show current level
+		if (document.title) {
+			document.title = `Level ${Game.currentLevel} - XRP Crypto Meme Suika`;
+		}
+		
+		// Add level indicator to UI if it exists
+		const levelIndicator = document.getElementById('level-indicator');
+		if (levelIndicator) {
+			levelIndicator.innerText = `Level ${Game.currentLevel}`;
+		}
 	},
 
 	showHighscore: function () {
@@ -613,25 +735,15 @@ window.Game = {
 	},
 	
 	initializeProgressTracking: function () {
-		// Find the next unrevealed code to set initial thresholds
-		const nextCode = Game.secretCodes.find(code => !code.revealed);
-		
-		if (nextCode) {
-			Game.currentProgressThreshold = nextCode.threshold;
-			
-			// Find the previous threshold (last revealed code or 0)
-			let previousThreshold = 0;
-			for (let i = 0; i < Game.secretCodes.length; i++) {
-				if (Game.secretCodes[i].revealed) {
-					previousThreshold = Game.secretCodes[i].threshold;
-				} else {
-					break;
-				}
-			}
-			Game.previousProgressThreshold = previousThreshold;
+		// For level system, we only have one code per level
+		if (Game.secretCodes[0] && !Game.secretCodes[0].revealed) {
+			Game.currentProgressThreshold = Game.secretCodes[0].threshold;
+			Game.previousProgressThreshold = 0;
 		} else {
-			// All codes already unlocked - prepare validator display
-			Game.elements.progressContainer.style.display = 'none';
+			// Code already unlocked for this level
+			if (Game.elements.progressContainer) {
+				Game.elements.progressContainer.style.display = 'none';
+			}
 		}
 	},
 	
@@ -664,12 +776,17 @@ window.Game = {
 			Game.cache.highscore = Game.score;
 			Game.cache.highscoreDate = currentDate;
 			Game.showHighscore();
-			const randomPhrase = Game.cryptoPhrases.newRecord[Math.floor(rand() * Game.cryptoPhrases.newRecord.length)];
-			Game.elements.endTitle.innerText = randomPhrase;
+			const levelPhrases = [
+				`🎆 LEVEL ${Game.currentLevel} CHAMPION! 🎆`,
+				`🚀 NEW LEVEL ${Game.currentLevel} RECORD!`,
+				`💎 LEVEL ${Game.currentLevel} MASTERED!`
+			];
+			Game.elements.endTitle.innerText = levelPhrases[Math.floor(rand() * levelPhrases.length)];
 		}
 
-		// Always save the updated cache (for game statistics)
-		localStorage.setItem('xrp-suika-game-cache', JSON.stringify(Game.cache));
+		// Save with level-specific cache key
+		const cacheKey = `xrp-suika-level${Game.currentLevel}-cache`;
+		localStorage.setItem(cacheKey, JSON.stringify(Game.cache));
 		
 		// Save to Supabase
 		Game.saveToSupabase();
@@ -679,18 +796,17 @@ window.Game = {
 	},
 	
 	saveGameState: function () {
-		// Update cache with current secret code status and timestamps
-		Game.cache.unlockedCodes = Game.secretCodes.map(code => code.revealed);
-		Game.cache.codeUnlockDates = Game.secretCodes.map((code, index) => {
-			// If code was just unlocked and we don't have a date, set it now
-			if (code.revealed && !Game.cache.codeUnlockDates[index]) {
-				return new Date().toISOString();
+		// Update cache with current secret code status for this level
+		if (Game.secretCodes[0]) {
+			Game.cache.unlockedCode = Game.secretCodes[0].revealed;
+			if (Game.secretCodes[0].revealed && !Game.cache.codeUnlockDate) {
+				Game.cache.codeUnlockDate = new Date().toISOString();
 			}
-			// Otherwise keep existing date
-			return Game.cache.codeUnlockDates[index];
-		});
+		}
 		
-		localStorage.setItem('xrp-suika-game-cache', JSON.stringify(Game.cache));
+		// Use level-specific cache key
+		const cacheKey = `xrp-suika-level${Game.currentLevel}-cache`;
+		localStorage.setItem(cacheKey, JSON.stringify(Game.cache));
 		
 		// Also save to Supabase if available
 		Game.saveToSupabase();
@@ -1014,12 +1130,12 @@ window.Game = {
 		Game.elements.progressFill.style.width = `${progressPercentage}%`;
 		Game.elements.progressText.innerText = `${Math.round(progressPercentage)}%`;
 		
-		// Update progress label with next code info
+		// Update progress label WITHOUT revealing the code name
 		const pointsNeeded = Math.max(0, Game.currentProgressThreshold - Game.score);
 		if (pointsNeeded > 0) {
-			Game.elements.progressLabel.innerText = `${pointsNeeded} points to unlock "${nextCode.code}"`;
+			Game.elements.progressLabel.innerText = `${pointsNeeded} points to unlock secret code`;
 		} else {
-			Game.elements.progressLabel.innerText = `Ready to unlock "${nextCode.code}"!`;
+			Game.elements.progressLabel.innerText = `Secret code ready to unlock!`;
 		}
 		
 		// Visual feedback based on progress
@@ -1347,7 +1463,7 @@ window.Game = {
 	preloadImages: function () {
 		return new Promise((resolve, reject) => {
 			const imagesToLoad = [
-				...Game.fruitSizes.map(fruit => fruit.img),
+				...Game.allFruitSizes.map(fruit => fruit.img),
 				'./assets/ui/background_nebula.jpg',
 				'./assets/ui/start_button.png',
 				'./assets/effects/particle_blast.png'
@@ -1956,6 +2072,9 @@ const resizeCanvas = () => {
 // Remove duplicate - startGame is now in HTML
 
 document.body.onload = () => {
+	// Initialize level FIRST (detects from URL)
+	Game.initializeLevel();
+	
 	// Initialize elements first
 	Game.initializeElements();
 	
