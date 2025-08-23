@@ -1465,7 +1465,7 @@
     <!-- Next Drop -->
     <div class="game-status-item">
       <span class="game-status-label" data-text="Next Drop">Next Drop</span>
-      <img id="game-next-fruit" src="./assets/tokens/token_01_xrp.png" alt="Next token to drop" />
+      <img id="game-next-fruit" src="/assets/tokens/token_01_xrp.png" alt="Next token to drop" />
     </div>
     
     <!-- Score Section -->
@@ -1482,15 +1482,19 @@
       </div>
     </div>
     
+    <!-- Progress Section -->
+    <div class="game-status-item">
+      <div id="progress-container-inline">
+        <div id="progress-label-inline" style="font-size: 10px; color: #FFD700; text-align: center; margin-bottom: 4px;">100 points to unlock secret code</div>
+        <div id="progress-bar-inline" style="width: 100px; height: 16px; background: rgba(0,0,0,0.6); border: 1px solid var(--col-xrp-accent); border-radius: 8px; overflow: hidden; position: relative;">
+          <div id="progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--col-xrp-accent), var(--col-crypto-gold)); transition: width 0.3s ease;"></div>
+        </div>
+        <div id="progress-text" style="font-size: 10px; color: var(--col-xrp-accent); text-align: center; margin-top: 2px;">0%</div>
+      </div>
+    </div>
+    
     <!-- Hidden elements to prevent JS errors -->
     <div id="validator-status" style="display: none;">Ready to HODL</div>
-    <div id="progress-container-inline" style="display: none;">
-      <div id="progress-label-inline"></div>
-      <div id="progress-bar-inline">
-        <div id="progress-fill"></div>
-      </div>
-      <div id="progress-text">0%</div>
-    </div>
   </div>
   
   <!-- Secret Code Popup - Outside game-ui to prevent scaling issues -->

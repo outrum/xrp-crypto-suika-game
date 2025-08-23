@@ -740,9 +740,9 @@ window.Game = {
 			Game.currentProgressThreshold = Game.secretCodes[0].threshold;
 			Game.previousProgressThreshold = 0;
 		} else {
-			// Code already unlocked for this level
-			if (Game.elements.progressContainer) {
-				Game.elements.progressContainer.style.display = 'none';
+			// Code already unlocked for this level - show completion message
+			if (Game.elements.progressLabel) {
+				Game.elements.progressLabel.innerText = 'Level Complete!';
 			}
 		}
 	},
@@ -1098,14 +1098,15 @@ window.Game = {
 		const nextCode = Game.secretCodes.find(code => !code.revealed);
 		
 		if (!nextCode) {
-			// All codes unlocked - show validator achievement
-			Game.elements.progressContainer.style.display = 'none';
+			// All codes unlocked - show validator achievement  
+			if (Game.elements.progressLabel) {
+				Game.elements.progressLabel.innerText = 'All codes unlocked!';
+			}
 			Game.showValidatorAchievement();
 			return;
 		}
 		
-		// Show progress container if hidden
-		Game.elements.progressContainer.style.display = 'block';
+		// Ensure progress container is visible (it should always be visible in footer)
 		
 		// Update current and previous thresholds
 		Game.currentProgressThreshold = nextCode.threshold;
@@ -1256,8 +1257,10 @@ window.Game = {
 				// Update progress bar for next threshold
 				Game.updateProgressBar();
 			} else {
-				// All codes unlocked - hide progress bar
-				Game.elements.progressContainer.style.display = 'none';
+				// All codes unlocked - show completion
+				if (Game.elements.progressLabel) {
+					Game.elements.progressLabel.innerText = 'All codes unlocked!';
+				}
 			}
 		}, 1000);
 	},
