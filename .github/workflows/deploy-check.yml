@@ -31,8 +31,12 @@ jobs:
         ls -la
         echo "Checking assets..."
         ls -la assets/
-        echo "Checking images..."
-        ls -la assets/img/
+        echo "Checking token images..."
+        ls -la assets/tokens/
+        echo "Checking UI assets..."
+        ls -la assets/ui/
+        echo "Checking effects..."
+        ls -la assets/effects/
     
     - name: Validate netlify.toml
       run: |
