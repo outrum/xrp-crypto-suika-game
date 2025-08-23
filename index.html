@@ -47,7 +47,7 @@
       width: 100%;
       max-width: 640px;
       margin: 0 auto;
-      height: calc(100vh - 120px);
+      height: calc(100vh - 80px);
     }
 
     #game-canvas {
@@ -164,86 +164,17 @@
       right: 0;
       bottom: 0;
       width: 100%;
-      height: 120px;
+      height: 80px;
       z-index: 1000;
-      background: 
-        linear-gradient(180deg, 
-          rgba(15, 0, 30, 0.95) 0%,
-          rgba(30, 0, 60, 0.98) 20%,
-          rgba(45, 0, 90, 0.95) 40%,
-          rgba(30, 0, 60, 0.98) 60%,
-          rgba(15, 0, 30, 0.95) 100%
-        ),
-        repeating-linear-gradient(
-          90deg,
-          transparent 0px,
-          rgba(138, 43, 226, 0.1) 1px,
-          transparent 2px,
-          transparent 40px,
-          rgba(0, 255, 127, 0.1) 41px,
-          transparent 42px,
-          transparent 80px
-        ),
-        repeating-linear-gradient(
-          0deg,
-          transparent 0px,
-          rgba(148, 0, 211, 0.05) 1px,
-          transparent 2px,
-          transparent 4px
-        );
+      background: rgba(10, 5, 20, 0.92);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 2px solid rgba(138, 43, 226, 0.8);
-      border-image: linear-gradient(90deg, 
-        rgba(148, 0, 211, 0.8),
-        rgba(0, 255, 127, 0.8),
-        rgba(148, 0, 211, 0.8)
-      ) 1;
-      box-shadow: 
-        0 -4px 30px rgba(138, 43, 226, 0.6),
-        0 -2px 20px rgba(0, 255, 127, 0.4),
-        inset 0 2px 20px rgba(148, 0, 211, 0.3),
-        inset 0 -2px 20px rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(20px) saturate(1.5);
-      z-index: 1000;
-      padding: 20px 30px;
-      gap: 20px;
-      position: relative;
-      overflow: hidden;
-      animation: alienHudBreathing 4s infinite ease-in-out;
+      padding: 0 40px;
     }
     
-    #game-status::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 200%;
-      height: 2px;
-      background: linear-gradient(90deg, 
-        transparent,
-        rgba(0, 255, 127, 0.8),
-        rgba(138, 43, 226, 0.8),
-        transparent
-      );
-      animation: alienScanLine 3s infinite linear;
-    }
-    
-    #game-status::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(ellipse at 20% 50%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 80% 50%, rgba(0, 255, 127, 0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 50%, rgba(148, 0, 211, 0.1) 0%, transparent 60%);
-      pointer-events: none;
-      animation: alienGlowPulse 2s infinite ease-in-out;
-    }
     
     
     #game-score {
@@ -290,7 +221,6 @@
       font-family: 'Orbitron', 'Exo 2', sans-serif;
       font-variant-numeric: tabular-nums;
       letter-spacing: 2px;
-      animation: alienScorePulse 3s infinite ease-in-out;
       position: relative;
       transform-style: preserve-3d;
     }
@@ -401,8 +331,19 @@
     .game-status-inline {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       justify-content: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'Azeret Mono', monospace;
+    }
+    
+    #level-indicator {
+      color: #FFD700;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .game-status-label {
@@ -417,7 +358,6 @@
       text-shadow: 
         0 0 8px rgba(148, 0, 211, 0.6),
         0 0 15px rgba(148, 0, 211, 0.4);
-      animation: alienLabelPulse 2.5s infinite ease-in-out;
       position: relative;
     }
     
@@ -437,22 +377,10 @@
     }
     
     .game-status-value {
-      color: rgba(0, 255, 127, 0.95);
-      font-size: 18px;
-      font-weight: 800;
-      font-family: 'Orbitron', 'Exo 2', monospace;
-      text-shadow: 
-        0 0 12px rgba(0, 255, 127, 0.7),
-        0 0 20px rgba(0, 255, 127, 0.5),
-        2px 2px 0 rgba(15, 0, 30, 0.8);
-      background: linear-gradient(90deg, 
-        rgba(0, 255, 127, 0.95) 0%,
-        rgba(148, 0, 211, 0.7) 50%,
-        rgba(0, 255, 127, 0.95) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: alienValueGlow 3s infinite ease-in-out;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+      font-weight: 600;
+      font-family: 'Azeret Mono', monospace;
     }
 
     #game-highscore-value {
@@ -1146,24 +1074,12 @@
     /* Responsive Design for Mobile and Small Screens */
     @media (max-width: 768px) {
       .container {
-        height: calc(100vh - 100px);
+        height: calc(100vh - 70px);
       }
       
       #game-status {
-        height: 100px;
-        padding: 15px 20px;
-        gap: 15px;
-      }
-      
-      .game-status-item {
         height: 70px;
-        min-width: 120px;
-        padding: 8px 12px;
-      }
-      
-      #progress-bar-inline {
-        width: 100px;
-        height: 18px;
+        padding: 0 20px;
       }
 
       #game-score {
@@ -1232,24 +1148,16 @@
 
     @media (max-width: 480px) {
       .container {
-        height: calc(100vh - 90px);
+        height: calc(100vh - 65px);
       }
       
       #game-status {
-        height: 90px;
-        padding: 12px 15px;
-        gap: 12px;
-      }
-      
-      .game-status-item {
         height: 65px;
-        min-width: 100px;
-        padding: 6px 10px;
+        padding: 0 15px;
       }
       
       #progress-bar-inline {
-        width: 85px;
-        height: 16px;
+        width: 100px;
       }
       
       #progress-label-inline {
@@ -1594,8 +1502,8 @@
           <span>High Score:</span>
           <span id="game-highscore-value" class="game-status-value">0</span>
         </div>
-        <div class="game-status-inline" style="margin-top: 5px;">
-          <span id="level-indicator" style="color: var(--col-crypto-gold); font-weight: 900;">Level 1</span>
+        <div class="game-status-inline">
+          <span id="level-indicator">Level 1</span>
         </div>
       </div>
     </div>
