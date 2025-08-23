@@ -1868,6 +1868,8 @@ window.Game = {
 					console.log('⚠️ Correcting sideways drift:', latestFruit.velocity.x);
 					Matter.Body.setVelocity(latestFruit, { x: 0, y: latestFruit.velocity.y });
 				}
+				// CRITICAL: Reset collision group to allow merging with other fruits
+				latestFruit.collisionFilter.group = 0;
 			}
 		}, 100); // After 100ms, allow normal rotation
 		
