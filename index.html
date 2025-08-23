@@ -185,6 +185,10 @@
       font-family: 'Azeret Mono', monospace;
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.5px;
+      padding: 8px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 127, 0.2);
     }
 
     .score-section {
@@ -200,26 +204,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      height: 80px;
-      min-width: 140px;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(0, 255, 127, 0.3);
-      border-radius: 15px;
-      backdrop-filter: blur(15px);
-      box-shadow: 
-        0 4px 15px rgba(138, 43, 226, 0.4),
-        inset 0 1px 0 rgba(0, 255, 127, 0.2),
-        inset 0 -1px 0 rgba(148, 0, 211, 0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .game-status-item:hover {
-      border-color: rgba(0, 255, 127, 0.5);
-      box-shadow: 
-        0 6px 20px rgba(138, 43, 226, 0.6),
-        inset 0 1px 0 rgba(0, 255, 127, 0.3);
+      gap: 8px;
     }
     
     /* Enhanced Progress Section */
