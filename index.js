@@ -644,6 +644,12 @@ window.Game = {
 			}
 		}
 		
+		// If at root or no valid level, redirect to level 1
+		if (path === '/' || path === '') {
+			window.location.href = '/level1/';
+			return 1;
+		}
+		
 		// Default to level 1 if no valid level found
 		return 1;
 	},
