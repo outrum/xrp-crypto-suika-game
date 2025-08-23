@@ -48,6 +48,7 @@
       max-width: 640px;
       margin: 0 auto;
       height: calc(100vh - 80px);
+      padding-top: 20px;
     }
 
     #game-canvas {
@@ -178,51 +179,16 @@
     
     
     #game-score {
-      font-size: 42px;
+      font-size: 48px;
       font-weight: 900;
-      color: rgba(0, 255, 127, 0.95);
-      text-shadow: 
-        0 0 20px rgba(0, 255, 127, 0.9),
-        0 0 40px rgba(138, 43, 226, 0.7),
-        0 0 60px rgba(148, 0, 211, 0.5),
-        0 2px 4px rgba(0, 0, 0, 0.9),
-        0 -2px 0 rgba(255, 255, 255, 0.1);
-      text-align: center;
-      padding: 10px 24px;
-      background: 
-        linear-gradient(135deg, 
-          rgba(15, 0, 30, 0.9) 0%,
-          rgba(30, 0, 60, 0.7) 50%,
-          rgba(15, 0, 30, 0.9) 100%
-        ),
-        repeating-linear-gradient(
-          45deg,
-          transparent 0px,
-          rgba(138, 43, 226, 0.1) 1px,
-          transparent 2px,
-          transparent 4px
-        );
-      border: 1px solid transparent;
-      border-image: linear-gradient(135deg, 
-        rgba(0, 255, 127, 0.8),
-        rgba(138, 43, 226, 0.8),
-        rgba(148, 0, 211, 0.8),
-        rgba(0, 255, 127, 0.8)
-      ) 1;
-      border-radius: 0;
-      clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-      box-shadow: 
-        0 0 30px rgba(0, 255, 127, 0.5),
-        0 0 60px rgba(138, 43, 226, 0.3),
-        inset 0 0 20px rgba(148, 0, 211, 0.2),
-        inset 0 2px 10px rgba(255, 255, 255, 0.1);
-      white-space: nowrap;
-      margin-bottom: 5px;
-      font-family: 'Orbitron', 'Exo 2', sans-serif;
+      color: #00FF7F;
+      font-family: 'Azeret Mono', monospace;
       font-variant-numeric: tabular-nums;
-      letter-spacing: 2px;
-      position: relative;
-      transform-style: preserve-3d;
+      letter-spacing: 0.5px;
+      padding: 8px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 127, 0.2);
     }
 
     .score-section {
@@ -230,6 +196,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 6px;
     }
 
     .game-status-item {
