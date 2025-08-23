@@ -69,7 +69,7 @@ window.Game = {
 		Game.elements.score = document.getElementById('game-score');
 		Game.elements.end = document.getElementById('game-end-container');
 		Game.elements.endTitle = document.getElementById('game-end-title');
-		Game.elements.statusValue = document.getElementById('game-highscore-value');
+		// High score element removed from UI
 		Game.elements.nextFruitImg = document.getElementById('game-next-fruit');
 		Game.elements.validatorStatus = document.getElementById('validator-status');
 		Game.elements.secretCodePopup = document.getElementById('secret-code-popup');
@@ -687,11 +687,7 @@ window.Game = {
 	},
 
 	showHighscore: function () {
-		if (Game.elements.statusValue) {
-			Game.elements.statusValue.innerText = Game.cache.highscore;
-			} else {
-			console.error('❌ High score element not found!');
-		}
+		// High score display removed from UI - keeping internal tracking only
 	},
 	loadHighscore: function () {
 		const gameCache = localStorage.getItem('xrp-suika-game-cache');
