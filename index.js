@@ -265,18 +265,18 @@ window.Game = {
 		// This will be handled in enableAudioAfterUserGesture()
 		
 		Game.sounds = {
-			click: new Audio('./assets/click.mp3'),
-			pop0: new Audio('./assets/pop0.mp3'),
-			pop1: new Audio('./assets/pop1.mp3'),
-			pop2: new Audio('./assets/pop2.mp3'),
-			pop3: new Audio('./assets/pop3.mp3'),
-			pop4: new Audio('./assets/pop4.mp3'),
-			pop5: new Audio('./assets/pop5.mp3'),
-			pop6: new Audio('./assets/pop6.mp3'),
-			pop7: new Audio('./assets/pop7.mp3'),
-			pop8: new Audio('./assets/pop8.mp3'),
-			pop9: new Audio('./assets/pop9.mp3'),
-			pop10: new Audio('./assets/pop10.mp3'),
+			click: new Audio('/assets/click.mp3'),
+			pop0: new Audio('/assets/pop0.mp3'),
+			pop1: new Audio('/assets/pop1.mp3'),
+			pop2: new Audio('/assets/pop2.mp3'),
+			pop3: new Audio('/assets/pop3.mp3'),
+			pop4: new Audio('/assets/pop4.mp3'),
+			pop5: new Audio('/assets/pop5.mp3'),
+			pop6: new Audio('/assets/pop6.mp3'),
+			pop7: new Audio('/assets/pop7.mp3'),
+			pop8: new Audio('/assets/pop8.mp3'),
+			pop9: new Audio('/assets/pop9.mp3'),
+			pop10: new Audio('/assets/pop10.mp3'),
 		};
 		
 		// Preload sounds with alien processing
@@ -605,17 +605,17 @@ window.Game = {
 	// XRP ecosystem token sizes - BETTER SIZE with safe physics boundaries
 	// All available tokens (full set)
 	allFruitSizes: [
-		{ radius: 28,  scoreValue: 1,  img: './assets/tokens/token_01_xrp.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
-		{ radius: 33,  scoreValue: 3,  img: './assets/tokens/token_01_xrp.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
-		{ radius: 38,  scoreValue: 6,  img: './assets/tokens/token_03_rocket.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
-		{ radius: 43,  scoreValue: 10, img: './assets/tokens/token_04_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
-		{ radius: 48,  scoreValue: 15, img: './assets/tokens/token_05_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
-		{ radius: 53,  scoreValue: 21, img: './assets/tokens/token_06_whale.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
-		{ radius: 58,  scoreValue: 28, img: './assets/tokens/token_03_rocket.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
-		{ radius: 63,  scoreValue: 36, img: './assets/tokens/token_03_rocket.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
-		{ radius: 68,  scoreValue: 45, img: './assets/tokens/token_09_galaxy.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
-		{ radius: 73,  scoreValue: 55, img: './assets/tokens/token_10_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
-		{ radius: 78,  scoreValue: 66, img: './assets/tokens/token_11_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
+		{ radius: 28,  scoreValue: 1,  img: '/assets/tokens/token_01_xrp.png', name: "Baby Ripple", imgWidth: 399, imgHeight: 400 },
+		{ radius: 33,  scoreValue: 3,  img: '/assets/tokens/token_01_xrp.png', name: "XRP Coin", imgWidth: 399, imgHeight: 400 },
+		{ radius: 38,  scoreValue: 6,  img: '/assets/tokens/token_03_rocket.png', name: "Rocket Fuel", imgWidth: 173, imgHeight: 400 },
+		{ radius: 43,  scoreValue: 10, img: '/assets/tokens/token_04_diamond.png', name: "Diamond Hands", imgWidth: 400, imgHeight: 350 },
+		{ radius: 48,  scoreValue: 15, img: '/assets/tokens/token_05_shield.png', name: "HODL Shield", imgWidth: 512, imgHeight: 512 },
+		{ radius: 53,  scoreValue: 21, img: '/assets/tokens/token_06_whale.png', name: "Crypto Whale", imgWidth: 400, imgHeight: 334 },
+		{ radius: 58,  scoreValue: 28, img: '/assets/tokens/token_03_rocket.png', name: "Rocket Launch", imgWidth: 173, imgHeight: 400 },
+		{ radius: 63,  scoreValue: 36, img: '/assets/tokens/token_03_rocket.png', name: "Moon Base", imgWidth: 173, imgHeight: 400 },
+		{ radius: 68,  scoreValue: 45, img: '/assets/tokens/token_09_galaxy.png', name: "Crypto Galaxy", imgWidth: 399, imgHeight: 400 },
+		{ radius: 73,  scoreValue: 55, img: '/assets/tokens/token_10_hodl.png', name: "Interstellar XRP", imgWidth: 400, imgHeight: 127 },
+		{ radius: 78,  scoreValue: 66, img: '/assets/tokens/token_11_crown.png', name: "Crypto God", imgWidth: 378, imgHeight: 396 },
 	],
 	
 	// Level-specific tokens (will be filtered based on current level)
@@ -1464,9 +1464,9 @@ window.Game = {
 		return new Promise((resolve, reject) => {
 			const imagesToLoad = [
 				...Game.allFruitSizes.map(fruit => fruit.img),
-				'./assets/ui/background_nebula.jpg',
-				'./assets/ui/start_button.png',
-				'./assets/effects/particle_blast.png'
+				'/assets/ui/background_nebula.jpg',
+				'/assets/ui/start_button.png',
+				'/assets/effects/particle_blast.png'
 			];
 			
 			let loadedCount = 0;
@@ -1725,7 +1725,7 @@ window.Game = {
 			angle: rand() * (Math.PI * 2),
 			render: {
 				sprite: {
-					texture: './assets/effects/pop_effect.png',
+					texture: '/assets/effects/pop_effect.png',
 					xScale: r / 384,
 					yScale: r / 384,
 				}
@@ -1801,7 +1801,7 @@ window.Game = {
 		
 		const defaultCollisionFilter = {
 			category: 0x0001, // Default category for game objects
-			mask: 0x0001 | 0x0008 // Collide with other game objects (0x0001) and walls (0x0008)
+			mask: 0xFFFF // Collide with everything (walls, other objects, etc)
 		};
 		
 		const circle = Bodies.circle(x, y, size.radius, {
@@ -2006,10 +2006,10 @@ const wallProps = {
 		lineWidth: 8,
 		visible: true
 	},
-	// Walls have their own collision category
+	// Force collision with all objects - no exceptions
 	collisionFilter: {
-		category: 0x0008, // Wall category
-		mask: 0xFFFF, // Walls can collide with everything
+		category: 0x0001,
+		mask: 0xFFFF,
 		group: 0
 	},
 	// Realistic wall physics
