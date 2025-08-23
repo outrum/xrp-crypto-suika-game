@@ -1801,7 +1801,7 @@ window.Game = {
 		
 		const defaultCollisionFilter = {
 			category: 0x0001, // Default category for game objects
-			mask: 0xFFFF // Collide with everything (walls, other objects, etc)
+			mask: 0x0001 | 0x0008 // Collide with other game objects (0x0001) and walls (0x0008)
 		};
 		
 		const circle = Bodies.circle(x, y, size.radius, {
@@ -2006,10 +2006,10 @@ const wallProps = {
 		lineWidth: 8,
 		visible: true
 	},
-	// Force collision with all objects - no exceptions
+	// Walls have their own collision category
 	collisionFilter: {
-		category: 0x0001,
-		mask: 0xFFFF,
+		category: 0x0008, // Wall category
+		mask: 0xFFFF, // Walls can collide with everything
 		group: 0
 	},
 	// Realistic wall physics
