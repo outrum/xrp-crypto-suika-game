@@ -684,12 +684,6 @@ window.Game = {
 		if (document.title) {
 			document.title = `Level ${Game.currentLevel} - XRP Crypto Meme Suika`;
 		}
-		
-		// Add level indicator to UI if it exists
-		const levelIndicator = document.getElementById('level-indicator');
-		if (levelIndicator) {
-			levelIndicator.innerText = `Level ${Game.currentLevel}`;
-		}
 	},
 
 	showHighscore: function () {
