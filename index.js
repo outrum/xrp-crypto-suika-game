@@ -676,7 +676,7 @@ window.Game = {
 		Game.updateLevelUI();
 		
 		console.log(`🎮 Level ${Game.currentLevel} initialized with ${Game.fruitSizes.length} tokens`);
-		console.log(`🔐 Secret code "${levelConfig.secretCode.code}" unlocks at ${levelConfig.secretCode.threshold} points`);
+		console.log(`🔐 Secret code unlocks at ${levelConfig.secretCode.threshold} points`);
 	},
 	
 	updateLevelUI: function() {
@@ -1220,7 +1220,7 @@ window.Game = {
 		Game.saveGameState();
 		Game.initializeProgressTracking();
 		Game.updateProgressBar();
-		console.log('All secret codes have been reset');
+		console.log('Secret codes have been reset');
 	},
 	
 	resetProgressAfterUnlock: function () {
