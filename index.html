@@ -288,34 +288,14 @@
     
 
     .game-status-label {
-      color: rgba(148, 0, 211, 0.9);
-      font-size: 12px;
-      font-weight: 700;
-      opacity: 0.95;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 10px;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-bottom: 6px;
-      font-family: 'Orbitron', 'Exo 2', monospace;
-      text-shadow: 
-        0 0 8px rgba(148, 0, 211, 0.6),
-        0 0 15px rgba(148, 0, 211, 0.4);
-      position: relative;
+      font-family: 'Azeret Mono', monospace;
     }
     
-    .game-status-label::before {
-      content: '';
-      position: absolute;
-      left: -6px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
-      height: 10px;
-      background: linear-gradient(180deg, 
-        rgba(0, 255, 127, 0.8) 0%,
-        rgba(148, 0, 211, 0.8) 100%);
-      border-radius: 1.5px;
-      animation: alienIndicator 2s infinite linear;
-    }
     
     .game-status-value {
       color: rgba(255, 255, 255, 0.9);
@@ -1015,14 +995,14 @@
     /* Responsive Design for Mobile and Small Screens */
     @media (max-width: 768px) {
       .container {
-        height: calc(100vh - 90px);
+        height: calc(100vh - 85px);
         padding-top: 15px;
       }
       
       #game-status {
-        height: 90px;
+        height: 85px;
         padding: 0 15px;
-        gap: 15px;
+        gap: 12px;
       }
 
       #game-score {
@@ -1031,7 +1011,7 @@
       }
 
       .game-status-label {
-        font-size: 9px;
+        font-size: 10px;
       }
       
       .game-status-value {
@@ -1049,7 +1029,7 @@
       }
       
       #progress-label-inline {
-        font-size: 9px;
+        font-size: 10px;
         line-height: 1.3;
         max-width: 140px;
       }
@@ -1098,14 +1078,14 @@
 
     @media (max-width: 480px) {
       .container {
-        height: calc(100vh - 85px);
+        height: calc(100vh - 80px);
         padding-top: 10px;
       }
       
       #game-status {
-        height: 85px;
-        padding: 0 10px;
-        gap: 10px;
+        height: 80px;
+        padding: 0 12px;
+        gap: 8px;
       }
       
       #progress-bar-inline {
@@ -1114,7 +1094,7 @@
       }
       
       #progress-label-inline {
-        font-size: 8px;
+        font-size: 10px;
         line-height: 1.2;
         max-width: 100px;
         word-break: break-word;
@@ -1126,7 +1106,7 @@
       }
 
       .game-status-label {
-        font-size: 8px;
+        font-size: 10px;
         letter-spacing: 1px;
       }
       
@@ -1144,8 +1124,8 @@
       }
       
       .game-status-inline {
-        font-size: 10px;
-        gap: 6px;
+        font-size: 11px;
+        gap: 8px;
       }
       
 
